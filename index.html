@@ -1,0 +1,27 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.sass">
+</head>
+<body>
+    <div class="textarea-menu" id="editor-menu">
+        <ul class="textarea-ul">
+            <li><button onclick="editorModule.enableBold();" class="disabledButton" type="button" id="bold" title="Bold"><i class="fas fa-bold"></i></button></li>
+            <li><button onclick="editorModule.enableItalic();" class="disabledButton" type="button" id="italic" title="Italic"><i class="fas fa-italic"></i></button></li>
+            <li><button onclick="editorModule.enableUnderline();" class="disabledButton" id="underline" type="button" title="Underline"><i class="fas fa-underline"></i></button></li>
+            <li><button onclick="editorModule.enableBulleted();" class="disabledButton" id="bullet" type="button" title="Bulleted list"><i class="fas fa-list"></i></button></li>
+            <li><button onclick="editorModule.enableNumbered();" class="disabledButton" id="numbered" type="button" title="Numbered list"><i class="fas fa-list-ol"></i></button></li>
+            <li>
+                <button type="button" class="hyperlink disabledButton" title="Hyperlink" id="link"><i class="fas fa-link"></i></button>
+                <div id="insert-link">
+                    <input type="text" placeholder="URL" id="url" autocomplete="off" class="link-input">
+                    <input type="text" placeholder="Text" id="text" autocomplete="off" class="link-input" style="margin-bottom: 0;">
+                    <div class="submit" style="width: 100%;">
+                        <input type="button" value="Insert" id="insert">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+ <script src="functionality.js"></script> 
+</html>
