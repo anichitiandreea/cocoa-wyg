@@ -30,30 +30,35 @@ var editorModule = (function () {
 	}
 
 	function enableBold() {
+		editorModule.preventDefaultClick();
 		if(!document.getElementById("bold").classList.contains("disabledButton")) {
 			document.execCommand('bold');
 		}
 	}
 
 	function enableItalic() {
+		editorModule.preventDefaultClick();
 		if(!document.getElementById("italic").classList.contains("disabledButton")) {
 			document.execCommand('italic');
 		}
 	}
 
 	function enableUnderline() {
+		editorModule.preventDefaultClick();
 		if(!document.getElementById("underline").classList.contains("disabledButton")) {
 			document.execCommand('underline');
 		}
 	}
 
 	function enableBulleted() {
+		editorModule.preventDefaultClick();
 		if(!document.getElementById("bullet").classList.contains("disabledButton")) {
 			document.execCommand('insertUnorderedList', false, null);
 		}
 	}
 
 	function enableNumbered() {
+		editorModule.preventDefaultClick();
 		if(!document.getElementById("numbered").classList.contains("disabledButton")) {
 			document.execCommand('insertOrderedList', false, null);
 		}

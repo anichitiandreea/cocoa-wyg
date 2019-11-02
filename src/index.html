@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../build/css/styles.css">
+    <link 
+        rel="stylesheet" 
+        href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" 
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" 
+        crossorigin="anonymous">
+</head>
+<body>
+    <div style="display: flex;flex-direction: column;justify-content: center;align-items: center;height: 100%;">
+    <div class="textarea-content">
+        <div class="textarea-menu" id="editor-menu">
+            <ul class="textarea-ul">
+                <li><button onclick="editorModule.enableBold();" class="disabledButton" type="button" id="bold" title="Bold"><i class="fas fa-bold"></i></button></li>
+                <li><button onclick="editorModule.enableItalic();" class="disabledButton" type="button" id="italic" title="Italic"><i class="fas fa-italic"></i></button></li>
+                <li><button onclick="editorModule.enableUnderline();" class="disabledButton" id="underline" type="button" title="Underline"><i class="fas fa-underline"></i></button></li>
+                <li><button onclick="editorModule.enableBulleted();" class="disabledButton" id="bullet" type="button" title="Bulleted list"><i class="fas fa-list"></i></button></li>
+                <li><button onclick="editorModule.enableNumbered();" class="disabledButton" id="numbered" type="button" title="Numbered list"><i class="fas fa-list-ol"></i></button></li>
+                <li>
+                    <button type="button" class="hyperlink disabledButton" title="Hyperlink" id="link"><i class="fas fa-link"></i></button>
+                    <div id="insert-link">
+                        <input type="text" placeholder="URL" id="url" autocomplete="off" class="link-input">
+                        <input type="text" placeholder="Text" id="text" autocomplete="off" class="link-input" style="margin-bottom: 0;">
+                        <div class="submit" style="width: 100%;">
+                            <input type="button" value="Insert" id="insert">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="textarea" spellcheck="false" contentEditable=true class="description" data-text="Description" style="outline: none;"></div>
+        <textarea id="textarea-real" name="details" style="display: none;"></textarea>
+    </div>
+    <div class="submit">
+        <input type="button" id="submit-button" value="Create" onclick="checkTaskCreateErrors();">
+    </div>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ <script src="../src/functionality.js"></script> 
+ <script>
+    editorModule.preventDefaultClick();
+    editorModule.completeTextarea();  
+    editorModule.addLink();  
+    editorModule.disableTextareaButtons();
+ </script>
+</html>
