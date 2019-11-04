@@ -35,16 +35,13 @@
         <div id="textarea" spellcheck="false" contentEditable=true class="description" data-text="Description" style="outline: none;"></div>
         <textarea id="textarea-real" name="details" style="display: none;"></textarea>
     </div>
-    <div class="submit">
-        <input type="button" id="submit-button" value="Create" onclick="checkTaskCreateErrors();">
-    </div>
     </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
  <script src="../src/functionality.js"></script> 
  <script>
     editorModule.preventDefaultClick();
-    editorModule.completeTextarea();  
+    //editorModule.completeTextarea();  
     editorModule.addLink();  
     editorModule.disableTextareaButtons();
  </script>
