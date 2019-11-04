@@ -9,8 +9,8 @@ const
 
   // folders
   src = 'src/',
-  build = 'build/'
-  ;
+  build = 'build/';
+
   const sass = require('gulp-sass'),
   postcss = require('gulp-postcss'),
   assets = require('postcss-assets'),
@@ -40,7 +40,7 @@ exports.build = gulp.parallel(exports.css);
 function watch(done) {
 
   // css changes
-  gulp.watch(src + '/*', css);
+  gulp.watch(src + '/styles.sass', css);
 
   done();
 }
@@ -48,4 +48,4 @@ function watch(done) {
 exports.watch = watch;
 
 // default task
-exports.default = gulp.series(exports.build, exports.watch);
+exports.default = gulp.series(exports.css, exports.watch);
