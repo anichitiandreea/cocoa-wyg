@@ -32,17 +32,167 @@
                 </li>
             </ul>
         </div>
-        <div id="textarea" spellcheck="false" contentEditable=true class="description" data-text="Description" style="outline: none;"></div>
+        <div id="textarea" spellcheck="false" contentEditable=true class="description" onkeyup="editorModule.completePreview();" data-text="Description" style="outline: none;">
+        </div>
         <textarea id="textarea-real" name="details" style="display: none;"></textarea>
     </div>
+    <div class="preview" id="preview"></div>
     </div>
+    <button id="mybutton">append</button>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
  <script src="../src/functionality.js"></script> 
  <script>
-    editorModule.preventDefaultClick();
-    //editorModule.completeTextarea();  
+    editorModule.preventDefaultClick();  
     editorModule.addLink();  
     editorModule.disableTextareaButtons();
+
+    /*jQuery('#textarea').click(function(e)  {
+    	e = e || window.event;
+    	var target = e.target || e.srcElement,
+        	text = target.textContent || target.innerText; 
+
+        editorModule.checkButtonsActive(target);
+        console.log(target);
+
+
+
+        /* s = window.getSelection();
+         var range = s.getRangeAt(0);
+         var node = s.anchorNode;
+         while(range.toString().indexOf(' ') != 0) {                 
+            range.setStart(node,(range.startOffset -1));
+         }
+
+         range.setStart(node, range.startOffset +1);
+         do{
+           range.setEnd(node,range.endOffset + 1);
+
+        }while(range.toString().indexOf(' ') == -1 && range.toString().trim() != '');
+        var str = range.toString().trim();
+        alert(str);*/
+
+        ////////
+
+        /*var htmlText = $('#textarea').text(); //the big divs text
+        
+        
+        var children = $('#textarea').children(); //get dom elements so they can be ignored later
+        
+        $.each(children, function (index, child) {
+            var txt = $(child).text().trim(); 
+            if (txt != '') { //if a child has text in him
+                htmlText = htmlText.replace(txt, 'xxx'); //replace it in the big text with xxx
+            }
+        });
+
+        
+        console.log(htmlText);
+        htmlText = htmlText.split("xxx"); //split for xxx make it arrat
+        
+        var counter = 0; //the part when the text is added
+        $.each(htmlText, function (i, el) {
+            htmlText[i] = el.trim();
+        
+            if (htmlText[i] != "") { //if there is something here than it's my text
+                htmlText[i] = '<span class="text">' + htmlText[i] + '</span>'; //replace it with a HTML element personalized
+                counter++; //mark that you have replaced the text
+            } else { // if there is nothing at this point it means that I have a DOM element here
+                htmlText[i] = $(children[i - counter])[0].outerHTML; //add the DOM element
+            }
+        });
+        
+        if (children.length >= htmlText.length) { //you might have the case when not all the HTML children were added back 
+            for (var i = htmlText.length - 1; i < children.length; i++) {
+                htmlText[i + 1] = $(children[i])[0].outerHTML; //add them
+            }
+        }
+        
+        htmlText = htmlText.join(""); //form a HTML markup from the altered stuff
+        
+        $('.foo').html(htmlText); // replace the content of the big div
+        
+        $('.text').on('click', function (data) { //add click support
+            alert('ok');
+        });*/
+
+     
+
+   // });
+
+    var foo = document.querySelector( "#textarea" );
+
+foo.addEventListener( "click", function ( event ) {
+		event = event || window.event;
+    	var target = event.target || event.srcElement,
+        	text = target.textContent || target.innerText; 
+
+        //editorModule.checkButtonsActive(target);
+        //console.log(target);
+
+    //if ( event.srcElement === this ) {
+    	//console.log(this);
+    	//console.log(event)
+        var clickedNode = textNodeFromPoint( this, event.clientX, event.clientY );
+        var caretPosition = insertBreakAtPoint(event);
+        console.log(caretPosition.tagName);
+        if ( clickedNode ) {
+            //alert( "You clicked: " + clickedNode.nodeValue );
+            editorModule.checkButtonsActive(target);
+        }
+
+        if(caretPosition.tagName == "B") {
+        	document.getElementById("bold").classList.add("item-active");
+        }
+        else {
+        	document.getElementById("bold").classList.remove("item-active");
+        }
+   // } 
+});
+
+function textNodeFromPoint( element, x, y ) {
+    var node, nodes = element.childNodes, range = document.createRange();
+    for ( var i = 0; node = nodes[i], i < nodes.length; i++ ) {
+    	//console.log(node)
+        if ( node.nodeType !== 3 &&  node.nodeType !== 1 ) continue;
+        range.selectNodeContents(node);
+        if ( isInside( x, y, range.getBoundingClientRect() ) ) {
+            return node;
+        }
+    }
+    return false;
+}
+
+function insertBreakAtPoint(e) {
+  var range;
+  var textNode;
+  var offset;
+
+  if (document.caretPositionFromPoint) {
+    range = document.caretPositionFromPoint(e.clientX, e.clientY);
+    textNode = range.offsetNode;
+    offset = range.offset;
+  } else if (document.caretRangeFromPoint) {
+    range = document.caretRangeFromPoint(e.clientX, e.clientY);
+    textNode = range.startContainer;
+    offset = range.startOffset;
+  }
+
+ return textNode.parentElement;
+}
+
+function isInside ( x, y, rect ) {
+    return x >= rect.left  && y >= rect.top
+    && x <= rect.right && y <= rect.bottom;
+}
+
+
+
+foo.addEventListener('keypress', logKey);
+
+function logKey(e) {
+	//console.log(e.target);
+}
+
  </script>
 </html>
