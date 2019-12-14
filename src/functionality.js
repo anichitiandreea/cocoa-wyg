@@ -1,6 +1,11 @@
 /*** WYSIWYG EDITOR ***/
 
 var editorModule = (function () {
+ 	function completePreview() {
+ 		var text = document.getElementById("textarea");
+ 		var preview = document.getElementById("preview");
+ 		preview.innerHTML = text.innerHTML;
+ 	}
 
 	function preventDefaultClick() {
 		$('#bold').bind('mousedown',function(e)
@@ -31,37 +36,126 @@ var editorModule = (function () {
 
 	function enableBold() {
 		editorModule.preventDefaultClick();
-		if(!document.getElementById("bold").classList.contains("disabledButton")) {
+		var bold = document.getElementById("bold");
+
+		if(!bold.classList.contains("disabledButton")) {
 			document.execCommand('bold');
+			checkPreviousState(bold);
 		}
 	}
 
 	function enableItalic() {
 		editorModule.preventDefaultClick();
-		if(!document.getElementById("italic").classList.contains("disabledButton")) {
+		var italic = document.getElementById("italic");
+
+		if(!italic.classList.contains("disabledButton")) {
 			document.execCommand('italic');
+			checkPreviousState(italic);
 		}
 	}
 
 	function enableUnderline() {
 		editorModule.preventDefaultClick();
-		if(!document.getElementById("underline").classList.contains("disabledButton")) {
+		var underline = document.getElementById("underline");
+
+		if(!underline.classList.contains("disabledButton")) {
 			document.execCommand('underline');
+			checkPreviousState(underline);
 		}
 	}
 
 	function enableBulleted() {
 		editorModule.preventDefaultClick();
-		if(!document.getElementById("bullet").classList.contains("disabledButton")) {
+		var bullet = document.getElementById("bullet");
+
+		if(!bullet.classList.contains("disabledButton")) {
 			document.execCommand('insertUnorderedList', false, null);
+			checkPreviousState(bullet);
 		}
 	}
 
 	function enableNumbered() {
 		editorModule.preventDefaultClick();
-		if(!document.getElementById("numbered").classList.contains("disabledButton")) {
+		var numbered = document.getElementById("numbered");
+
+		if(!numbered.classList.contains("disabledButton")) {
 			document.execCommand('insertOrderedList', false, null);
+			checkPreviousState(numbered);
 		}
+	}
+
+	function checkPreviousState(element) {
+		if(!element.classList.contains("item-active")) {
+			element.classList.add("item-active");
+		}
+		else {
+			element.classList.remove("item-active");
+		}
+	}
+
+	function checkButtonsActive(target) {
+		var bold = document.getElementById("bold");
+		var italic = document.getElementById("italic");
+		var underline = document.getElementById("underline");
+		var bullet = document.getElementById("bullet");
+		var numbered = document.getElementById("numbered");
+
+		checkClickedElement(target, "B", bold);
+		checkClickedElement(target, "I", italic);
+		checkClickedElement(target, "U", underline);
+
+		checkClickedULElement(target, "LI", bullet);
+		checkClickedOLElement(target, "LI", numbered);
+	}
+
+	function checkClickedElement(target, tagName, element) {
+		if(target.tagName == tagName) {
+			if(!element.classList.contains("item-active")) {
+				element.classList.add("item-active");
+			}
+		}
+		else if(!target.classList.contains("textarea-content")) {
+			element.classList.remove("item-active");
+		}
+
+		while(target.parentNode && target.parentNode.tagName !=="BODY") {
+		    target = target.parentNode;
+		    if(target.tagName == tagName) {
+		    	element.classList.add("item-active");
+		    }
+	    }
+	}
+
+	function checkClickedULElement(caretPosition, tagName, element) {
+		if(caretPosition.tagName == tagName && caretPosition.closest("ul") != null) {
+        	element.classList.add("item-active");
+        }
+        else if(!caretPosition.classList.contains("textarea-content")) {
+        	element.classList.remove("item-active");
+        }
+
+        while(caretPosition.parentNode && caretPosition.parentNode.tagName !=="BODY") {
+		    caretPosition = caretPosition.parentNode;
+		    if(caretPosition.tagName == tagName && caretPosition.closest("ul") != null) {
+		    	element.classList.add("item-active");
+		    }
+	    }
+	}
+
+	function checkClickedOLElement(caretPosition, tagName, element) {
+		if(caretPosition.tagName == tagName && caretPosition.closest("ol") != null) {
+        	element.classList.add("item-active");
+        }
+        else if(!caretPosition.classList.contains("textarea-content")) {
+        	element.classList.remove("item-active");
+        }
+
+        while(caretPosition.parentNode && caretPosition.parentNode.tagName !=="BODY") {
+		    caretPosition = caretPosition.parentNode;
+		    if(caretPosition.tagName == tagName && caretPosition.closest("ol") != null) {
+		    	element.classList.add("item-active");
+		    }
+	    }
 	}
 
 	function completeTextarea() {
@@ -107,19 +201,26 @@ var editorModule = (function () {
 		let createA = document.createElement('a'),
 		    createAText = document.createTextNode(text);
 	    createA.setAttribute('href', url);
+	    createA.setAttribute('id', 'myUrl');
 	    createA.appendChild(createAText);	
 
-	    let displayText = "<a href='" + url + "'>" + text + "</a>";
+	    let displayText = "<a href='" + url + "' id='myUrl'>" + text + "</a>";
 
 		document.getElementById("insert-link").classList.remove("display");
 		let textarea = document.getElementById("textarea");
+
+		//var text1 = document.createElement("span");
+		//text1.setAttribute("class", "myHref");
+        //text1.innerHTML= "<a href='" + url + "' id='myUrl'>" + text + "</a><div class='myButtons'><button>ddfdf</button><button>sdfdsfd</button></div>";
+
 		if(container.id == "textarea" || container.parentNode.closest("#textarea")) {
 			range.insertNode(createA);
-			createA.after( document.createTextNode("\u00A0") )	;
+			createA.after( document.createTextNode("\u00A0") );
 		}
 		else {
 			document.getElementById("textarea").innerHTML += displayText;
 			document.getElementById("textarea").innerHTML += '&nbsp;';
+			//document.getElementById("textarea").after(text1);
 		}		
 	}
 
@@ -175,7 +276,9 @@ var editorModule = (function () {
 		enableNumbered: enableNumbered,
 		completeTextarea: completeTextarea,
 		addLink: addLink,
-		disableTextareaButtons: disableTextareaButtons
+		disableTextareaButtons: disableTextareaButtons,
+		completePreview: completePreview,
+		checkButtonsActive: checkButtonsActive
 	};
 
 })();
