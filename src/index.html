@@ -42,126 +42,124 @@
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
  <script src="../src/functionality.js"></script> 
- <script>
+<script>
     editorModule.preventDefaultClick();  
     editorModule.addLink();  
     editorModule.disableTextareaButtons();
 
-    /*jQuery('#textarea').click(function(e)  {
-    	e = e || window.event;
-    	var target = e.target || e.srcElement,
-        	text = target.textContent || target.innerText; 
+    var textarea = document.getElementById("textarea");
 
-        editorModule.checkButtonsActive(target);
-        console.log(target);
-
-
-
-        /* s = window.getSelection();
-         var range = s.getRangeAt(0);
-         var node = s.anchorNode;
-         while(range.toString().indexOf(' ') != 0) {                 
-            range.setStart(node,(range.startOffset -1));
-         }
-
-         range.setStart(node, range.startOffset +1);
-         do{
-           range.setEnd(node,range.endOffset + 1);
-
-        }while(range.toString().indexOf(' ') == -1 && range.toString().trim() != '');
-        var str = range.toString().trim();
-        alert(str);*/
-
-        ////////
-
-        /*var htmlText = $('#textarea').text(); //the big divs text
-        
-        
-        var children = $('#textarea').children(); //get dom elements so they can be ignored later
-        
-        $.each(children, function (index, child) {
-            var txt = $(child).text().trim(); 
-            if (txt != '') { //if a child has text in him
-                htmlText = htmlText.replace(txt, 'xxx'); //replace it in the big text with xxx
-            }
-        });
-
-        
-        console.log(htmlText);
-        htmlText = htmlText.split("xxx"); //split for xxx make it arrat
-        
-        var counter = 0; //the part when the text is added
-        $.each(htmlText, function (i, el) {
-            htmlText[i] = el.trim();
-        
-            if (htmlText[i] != "") { //if there is something here than it's my text
-                htmlText[i] = '<span class="text">' + htmlText[i] + '</span>'; //replace it with a HTML element personalized
-                counter++; //mark that you have replaced the text
-            } else { // if there is nothing at this point it means that I have a DOM element here
-                htmlText[i] = $(children[i - counter])[0].outerHTML; //add the DOM element
-            }
-        });
-        
-        if (children.length >= htmlText.length) { //you might have the case when not all the HTML children were added back 
-            for (var i = htmlText.length - 1; i < children.length; i++) {
-                htmlText[i + 1] = $(children[i])[0].outerHTML; //add them
-            }
-        }
-        
-        htmlText = htmlText.join(""); //form a HTML markup from the altered stuff
-        
-        $('.foo').html(htmlText); // replace the content of the big div
-        
-        $('.text').on('click', function (data) { //add click support
-            alert('ok');
-        });*/
-
-     
-
-   // });
-
-    var foo = document.querySelector( "#textarea" );
-
-foo.addEventListener( "click", function ( event ) {
+	textarea.addEventListener("click", function (event) {
 		event = event || window.event;
-    	var target = event.target || event.srcElement,
-        	text = target.textContent || target.innerText; 
+    	var target = event.target || event.srcElement;
 
-        //editorModule.checkButtonsActive(target);
-        //console.log(target);
-
-    //if ( event.srcElement === this ) {
-    	//console.log(this);
-    	//console.log(event)
-        var clickedNode = textNodeFromPoint( this, event.clientX, event.clientY );
+        //var clickedNode = textNodeFromPoint(this, event.clientX, event.clientY);
         var caretPosition = insertBreakAtPoint(event);
-        console.log(caretPosition.tagName);
-        if ( clickedNode ) {
-            //alert( "You clicked: " + clickedNode.nodeValue );
-            editorModule.checkButtonsActive(target);
-        }
 
-        if(caretPosition.tagName == "B") {
+        //console.log(caretPosition.tagName);
+
+        /*if (clickedNode) {
+            editorModule.checkButtonsActive(target);
+        }*/
+
+        ///caret check code
+
+        editorModule.checkButtonsActive(caretPosition);
+
+        /*if(caretPosition.tagName == "B") {
         	document.getElementById("bold").classList.add("item-active");
         }
-        else {
+        else if(!caretPosition.classList.contains("textarea-content")) {
         	document.getElementById("bold").classList.remove("item-active");
         }
-   // } 
-});
 
-function textNodeFromPoint( element, x, y ) {
+        var boldCaret = caretPosition;
+
+        while(boldCaret.parentNode && boldCaret.parentNode.tagName !=="BODY") {
+		    boldCaret = boldCaret.parentNode;
+		    if(boldCaret.tagName == "B") {
+		    	document.getElementById("bold").classList.add("item-active");
+		    }
+	    }
+
+	    if(caretPosition.tagName == "I") {
+        	document.getElementById("italic").classList.add("item-active");
+        }
+        else if(!caretPosition.classList.contains("textarea-content")) {
+        	document.getElementById("italic").classList.remove("item-active");
+        }
+
+        var italicCaret = caretPosition;
+
+        while(italicCaret.parentNode && italicCaret.parentNode.tagName !=="BODY") {
+		    italicCaret = italicCaret.parentNode;
+		    if(italicCaret.tagName == "I") {
+		    	document.getElementById("italic").classList.add("item-active");
+		    }
+	    }
+
+	    if(caretPosition.tagName == "U") {
+        	document.getElementById("underline").classList.add("item-active");
+        }
+        else if(!caretPosition.classList.contains("textarea-content")) {
+        	document.getElementById("underline").classList.remove("item-active");
+        }
+
+        var underlineCaret = caretPosition;
+
+        while(underlineCaret.parentNode && underlineCaret.parentNode.tagName !=="BODY") {
+		    underlineCaret = underlineCaret.parentNode;
+		    if(underlineCaret.tagName == "U") {
+		    	document.getElementById("underline").classList.add("item-active");
+		    }
+	    }
+
+	    if(caretPosition.tagName == "LI" && caretPosition.closest("ul") != null) {
+        	document.getElementById("bullet").classList.add("item-active");
+        }
+        else if(!caretPosition.classList.contains("textarea-content")) {
+        	document.getElementById("bullet").classList.remove("item-active");
+        }
+
+        var bulletCaret = caretPosition;
+
+        while(bulletCaret.parentNode && bulletCaret.parentNode.tagName !=="BODY") {
+		    bulletCaret = bulletCaret.parentNode;
+		    if(bulletCaret.tagName == "LI" && caretPosition.closest("ul") != null) {
+		    	document.getElementById("bullet").classList.add("item-active");
+		    }
+	    }
+
+	    if(caretPosition.tagName == "LI" && caretPosition.closest("ol") != null) {
+        	document.getElementById("numbered").classList.add("item-active");
+        }
+        else if(!caretPosition.classList.contains("textarea-content")) {
+        	document.getElementById("numbered").classList.remove("item-active");
+        }
+
+        var numbered = caretPosition;
+
+        while(numbered.parentNode && numbered.parentNode.tagName !=="BODY") {
+		    numbered = numbered.parentNode;
+		    if(numbered.tagName == "LI" && caretPosition.closest("ol") != null) {
+		    	document.getElementById("numbered").classList.add("item-active");
+		    }
+	    }*/
+
+	    ///// caret code end 
+	});
+
+/*function textNodeFromPoint( element, x, y ) {
     var node, nodes = element.childNodes, range = document.createRange();
-    for ( var i = 0; node = nodes[i], i < nodes.length; i++ ) {
-    	//console.log(node)
-        if ( node.nodeType !== 3 &&  node.nodeType !== 1 ) continue;
+    for (var i = 0; node = nodes[i], i < nodes.length; i++) {
+        if (node.nodeType !== 3 &&  node.nodeType !== 1) continue;
         range.selectNodeContents(node);
-        if ( isInside( x, y, range.getBoundingClientRect() ) ) {
+        if (isInside( x, y, range.getBoundingClientRect())) {
             return node;
         }
     }
     return false;
-}
+}*/
 
 function insertBreakAtPoint(e) {
   var range;
@@ -181,18 +179,10 @@ function insertBreakAtPoint(e) {
  return textNode.parentElement;
 }
 
-function isInside ( x, y, rect ) {
+/*function isInside ( x, y, rect ) {
     return x >= rect.left  && y >= rect.top
     && x <= rect.right && y <= rect.bottom;
-}
+}*/
 
-
-
-foo.addEventListener('keypress', logKey);
-
-function logKey(e) {
-	//console.log(e.target);
-}
-
- </script>
+</script>
 </html>
