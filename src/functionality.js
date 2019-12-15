@@ -7,10 +7,6 @@ var editorModule = (function () {
  		preview.innerHTML = text.innerHTML;
  	}
 
- 	function getTarget() {
- 		var id = event.target.id;
- 	}
-
 	function preventDefaultClick() {
 		$('#bold').bind('mousedown',function(e)
 	    {
@@ -46,47 +42,6 @@ var editorModule = (function () {
 			document.execCommand('bold');
 			checkPreviousState(bold);
 		}
-	}
-
-	function checkPreviousState(element) {
-		if(!element.classList.contains("item-active")) {
-			element.classList.add("item-active");
-		}
-		else {
-			element.classList.remove("item-active");
-		}
-	}
-
-	function checkButtonsActive(target) {
-		var bold = document.getElementById("bold");
-		var italic = document.getElementById("italic");
-		var underline = document.getElementById("underline");
-		var bullet = document.getElementById("bullet");
-		var numbered = document.getElementById("numbered");
-
-		checkClickedElement(target, "B", bold);
-		checkClickedElement(target, "I", italic);
-		checkClickedElement(target, "LI", numbered);
-		checkClickedElement(target, "LI", bullet);
-		checkClickedElement(target, "U", underline);
-	}
-
-	function checkClickedElement(target, tagName, element) {
-		if(target.tagName == tagName) {
-			if(!element.classList.contains("item-active")) {
-				element.classList.add("item-active");
-			}
-		}
-		else {
-			element.classList.remove("item-active");
-		}
-
-		while(target.parentNode && target.parentNode.tagName !=="BODY") {
-		    target = target.parentNode;
-		    if(target.tagName == tagName) {
-		    	element.classList.add("item-active");
-		    }
-	    }
 	}
 
 	function enableItalic() {
@@ -127,6 +82,80 @@ var editorModule = (function () {
 			document.execCommand('insertOrderedList', false, null);
 			checkPreviousState(numbered);
 		}
+	}
+
+	function checkPreviousState(element) {
+		if(!element.classList.contains("item-active")) {
+			element.classList.add("item-active");
+		}
+		else {
+			element.classList.remove("item-active");
+		}
+	}
+
+	function checkButtonsActive(target) {
+		var bold = document.getElementById("bold");
+		var italic = document.getElementById("italic");
+		var underline = document.getElementById("underline");
+		var bullet = document.getElementById("bullet");
+		var numbered = document.getElementById("numbered");
+
+		checkClickedElement(target, "B", bold);
+		checkClickedElement(target, "I", italic);
+		checkClickedElement(target, "U", underline);
+
+		checkClickedULElement(target, "LI", bullet);
+		checkClickedOLElement(target, "LI", numbered);
+	}
+
+	function checkClickedElement(target, tagName, element) {
+		if(target.tagName == tagName) {
+			if(!element.classList.contains("item-active")) {
+				element.classList.add("item-active");
+			}
+		}
+		else if(!target.classList.contains("textarea-content")) {
+			element.classList.remove("item-active");
+		}
+
+		while(target.parentNode && target.parentNode.tagName !=="BODY") {
+		    target = target.parentNode;
+		    if(target.tagName == tagName) {
+		    	element.classList.add("item-active");
+		    }
+	    }
+	}
+
+	function checkClickedULElement(caretPosition, tagName, element) {
+		if(caretPosition.tagName == tagName && caretPosition.closest("ul") != null) {
+        	element.classList.add("item-active");
+        }
+        else if(!caretPosition.classList.contains("textarea-content")) {
+        	element.classList.remove("item-active");
+        }
+
+        while(caretPosition.parentNode && caretPosition.parentNode.tagName !=="BODY") {
+		    caretPosition = caretPosition.parentNode;
+		    if(caretPosition.tagName == tagName && caretPosition.closest("ul") != null) {
+		    	element.classList.add("item-active");
+		    }
+	    }
+	}
+
+	function checkClickedOLElement(caretPosition, tagName, element) {
+		if(caretPosition.tagName == tagName && caretPosition.closest("ol") != null) {
+        	element.classList.add("item-active");
+        }
+        else if(!caretPosition.classList.contains("textarea-content")) {
+        	element.classList.remove("item-active");
+        }
+
+        while(caretPosition.parentNode && caretPosition.parentNode.tagName !=="BODY") {
+		    caretPosition = caretPosition.parentNode;
+		    if(caretPosition.tagName == tagName && caretPosition.closest("ol") != null) {
+		    	element.classList.add("item-active");
+		    }
+	    }
 	}
 
 	function completeTextarea() {
@@ -249,7 +278,6 @@ var editorModule = (function () {
 		addLink: addLink,
 		disableTextareaButtons: disableTextareaButtons,
 		completePreview: completePreview,
-		getTarget: getTarget,
 		checkButtonsActive: checkButtonsActive
 	};
 
