@@ -109,21 +109,30 @@ var editorModule = (function () {
 	}
 
 	function checkClickedElement(target, tagName, element) {
+		var ok = 1;
 		if(target.tagName == tagName) {
-			if(!element.classList.contains("item-active")) {
-				element.classList.add("item-active");
-			}
-		}
-		else if(!target.classList.contains("textarea-content")) {
-			element.classList.remove("item-active");
+			element.classList.add("item-active");
+			ok = 0;
 		}
 
-		while(target.parentNode && target.parentNode.tagName !=="BODY") {
-		    target = target.parentNode;
-		    if(target.tagName == tagName) {
+	    if(target.firstChild.tagName == tagName) {
+	    	element.classList.add("item-active");
+	    	ok = 0;
+	    }
+
+	    var copyTarget = target;
+
+		while(copyTarget.parentNode && copyTarget.parentNode.tagName !=="BODY") {
+		    copyTarget = copyTarget.parentNode;
+		    if(copyTarget.tagName == tagName) {
 		    	element.classList.add("item-active");
+		    	ok = 0;
 		    }
 	    }
+
+	    if(!target.classList.contains("textarea-content") && ok == 1) {
+			element.classList.remove("item-active");
+		}
 	}
 
 	function checkClickedULElement(caretPosition, tagName, element) {
@@ -156,6 +165,34 @@ var editorModule = (function () {
 		    	element.classList.add("item-active");
 		    }
 	    }
+	}
+
+	function getCaretPosition(e) {
+	  	var range, textNode, offset;
+
+	  	if (document.caretPositionFromPoint) {
+	    	range = document.caretPositionFromPoint(e.clientX, e.clientY);
+	    	textNode = range.offsetNode;
+	    	offset = range.offset;
+	  	} else if (document.caretRangeFromPoint) {
+	    	range = document.caretRangeFromPoint(e.clientX, e.clientY);
+	    	textNode = range.startContainer;
+	    	offset = range.startOffset;
+	  	}
+
+	 	return textNode.parentElement;
+	}
+
+	function activateButtons() {
+		var textarea = document.getElementById("textarea");
+
+		textarea.addEventListener("click", function (event) {
+			event = event || window.event;
+	    	var target = event.target || event.srcElement;
+	        var caretPosition = getCaretPosition(event);
+
+	        checkButtonsActive(caretPosition);
+		});
 	}
 
 	function completeTextarea() {
@@ -209,10 +246,6 @@ var editorModule = (function () {
 		document.getElementById("insert-link").classList.remove("display");
 		let textarea = document.getElementById("textarea");
 
-		//var text1 = document.createElement("span");
-		//text1.setAttribute("class", "myHref");
-        //text1.innerHTML= "<a href='" + url + "' id='myUrl'>" + text + "</a><div class='myButtons'><button>ddfdf</button><button>sdfdsfd</button></div>";
-
 		if(container.id == "textarea" || container.parentNode.closest("#textarea")) {
 			range.insertNode(createA);
 			createA.after( document.createTextNode("\u00A0") );
@@ -220,7 +253,6 @@ var editorModule = (function () {
 		else {
 			document.getElementById("textarea").innerHTML += displayText;
 			document.getElementById("textarea").innerHTML += '&nbsp;';
-			//document.getElementById("textarea").after(text1);
 		}		
 	}
 
@@ -278,7 +310,8 @@ var editorModule = (function () {
 		addLink: addLink,
 		disableTextareaButtons: disableTextareaButtons,
 		completePreview: completePreview,
-		checkButtonsActive: checkButtonsActive
+		checkButtonsActive: checkButtonsActive,
+		activateButtons: activateButtons
 	};
 
 })();
