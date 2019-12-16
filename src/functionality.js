@@ -288,6 +288,7 @@ var editorModule = (function () {
 				if(editor !== e.srcElement.closest("#editor-menu")) {
 					for(var i = 0; i <= buttons.length; i++) {
 						buttons[i].classList.add("disabledButton");
+						buttons[i].classList.remove("item-active");
 					}
 				}
 			}
