@@ -194,11 +194,9 @@ var editorModule = (function () {
 	  	if (document.caretPositionFromPoint) {
 	    	range = document.caretPositionFromPoint(e.clientX, e.clientY);
 	    	textNode = range.offsetNode;
-	    	offset = range.offset;
 	  	} else if (document.caretRangeFromPoint) {
 	    	range = document.caretRangeFromPoint(e.clientX, e.clientY);
 	    	textNode = range.startContainer;
-	    	offset = range.startOffset;
 	  	}
 
 	 	return textNode.parentElement;
@@ -287,12 +285,10 @@ var editorModule = (function () {
 	    if (window.getSelection) {
 	        sel = window.getSelection();
 	        if (sel.getRangeAt && sel.rangeCount) {
-	    		console.log(sel.getRangeAt(0));
 	            return sel.getRangeAt(0);
 	        }
 	    } 
 	    else if (document.selection && document.selection.createRange) {
-	    	console.log(document.selection.createRange());
 	        return document.selection.createRange();
 	    }
 
