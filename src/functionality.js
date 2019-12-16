@@ -1,12 +1,14 @@
 /*** WYSIWYG EDITOR ***/
 
 var editorModule = (function () {
+	/* Complete preview with the text from the Editor */
  	function completePreview() {
  		var text = document.getElementById("textarea");
  		var preview = document.getElementById("preview");
  		preview.innerHTML = text.innerHTML;
  	}
 
+ 	/* Prevent the current click to follow the link path */
 	function preventDefaultClick() {
 		$('#bold').bind('mousedown',function(e)
 	    {
@@ -34,6 +36,7 @@ var editorModule = (function () {
 	    });
 	}
 
+	/* Enable bold for the typed text */
 	function enableBold() {
 		editorModule.preventDefaultClick();
 		var bold = document.getElementById("bold");
@@ -44,6 +47,7 @@ var editorModule = (function () {
 		}
 	}
 
+	/* Enable italic for the typed text */
 	function enableItalic() {
 		editorModule.preventDefaultClick();
 		var italic = document.getElementById("italic");
@@ -54,6 +58,7 @@ var editorModule = (function () {
 		}
 	}
 
+	/* Enable underline for the typed text */
 	function enableUnderline() {
 		editorModule.preventDefaultClick();
 		var underline = document.getElementById("underline");
@@ -64,6 +69,7 @@ var editorModule = (function () {
 		}
 	}
 
+	/* Enable buleted list for the typed text */
 	function enableBulleted() {
 		editorModule.preventDefaultClick();
 		var bullet = document.getElementById("bullet");
@@ -74,6 +80,7 @@ var editorModule = (function () {
 		}
 	}
 
+	/* Enable numbered list for the typed text */
 	function enableNumbered() {
 		editorModule.preventDefaultClick();
 		var numbered = document.getElementById("numbered");
@@ -84,6 +91,7 @@ var editorModule = (function () {
 		}
 	}
 
+	/* Check if the button is activated */
 	function checkPreviousState(element) {
 		if(!element.classList.contains("item-active")) {
 			element.classList.add("item-active");
@@ -93,6 +101,7 @@ var editorModule = (function () {
 		}
 	}
 
+	/* Check for every click if the current cursor position is inside bold, italic, etc;*/ 
 	function checkButtonsActive(target) {
 		var bold = document.getElementById("bold");
 		var italic = document.getElementById("italic");
@@ -108,13 +117,18 @@ var editorModule = (function () {
 		checkClickedOLElement(target, "LI", numbered);
 	}
 
+	/* Check if the target clicked is B, I, DIV etc;
+	   If it is true than activate the coresponding button, else disable it */
 	function checkClickedElement(target, tagName, element) {
 		var ok = 1;
+
+		// Check the curent target element
 		if(target.tagName == tagName) {
 			element.classList.add("item-active");
 			ok = 0;
 		}
 
+		// Check the first child of target
 	    if(target.firstChild.tagName == tagName) {
 	    	element.classList.add("item-active");
 	    	ok = 0;
@@ -122,7 +136,8 @@ var editorModule = (function () {
 
 	    var copyTarget = target;
 
-		while(copyTarget.parentNode && copyTarget.parentNode.tagName !=="BODY") {
+	    // Iterate all the parents of clicked element
+		while(copyTarget.parentNode && copyTarget.parentNode.tagName !== "BODY") {
 		    copyTarget = copyTarget.parentNode;
 		    if(copyTarget.tagName == tagName) {
 		    	element.classList.add("item-active");
@@ -130,11 +145,14 @@ var editorModule = (function () {
 		    }
 	    }
 
+	    // If none of the targets match the curent tag name than remove the activated button color
 	    if(!target.classList.contains("textarea-content") && ok == 1) {
 			element.classList.remove("item-active");
 		}
 	}
 
+	/* Check if the target clicked is an UL element etc;
+	   If it is true than activate the coresponding button, else disable it */
 	function checkClickedULElement(caretPosition, tagName, element) {
 		if(caretPosition.tagName == tagName && caretPosition.closest("ul") != null) {
         	element.classList.add("item-active");
@@ -151,6 +169,8 @@ var editorModule = (function () {
 	    }
 	}
 
+	/* Check if the target clicked is an OL etc;
+	   If it is true than activate the coresponding button, else disable it */
 	function checkClickedOLElement(caretPosition, tagName, element) {
 		if(caretPosition.tagName == tagName && caretPosition.closest("ol") != null) {
         	element.classList.add("item-active");
@@ -167,6 +187,7 @@ var editorModule = (function () {
 	    }
 	}
 
+	/* Get the element at the position of the caret */
 	function getCaretPosition(e) {
 	  	var range, textNode, offset;
 
@@ -183,6 +204,7 @@ var editorModule = (function () {
 	 	return textNode.parentElement;
 	}
 
+	/* Call the function which activate the buttons on every click */
 	function activateButtons() {
 		var textarea = document.getElementById("textarea");
 
@@ -195,6 +217,7 @@ var editorModule = (function () {
 		});
 	}
 
+    // old
 	function completeTextarea() {
 		document.getElementById("submit-button").addEventListener('click', function(e) {
 	        currentText = document.getElementById("textarea").innerHTML;
@@ -202,6 +225,7 @@ var editorModule = (function () {
 	    });
 	}
 
+	/* Add link pipeline */
 	function addLink() {
 		let range = null;
 		document.getElementById("link").addEventListener('click', function(e) {
@@ -218,6 +242,7 @@ var editorModule = (function () {
 		});
 	}
 
+	/* Show link panel */
 	function toggleLinkContainer() {
 		let linkContainer = document.getElementById("insert-link");
 		if(linkContainer.classList.contains("display")) {
@@ -228,6 +253,7 @@ var editorModule = (function () {
 		}
 	}
 
+	/* Insert link in the Editor */
 	function insertLink(range, container) {
 		let url = document.getElementById("url").value,
 			text = document.getElementById("text").value;
@@ -256,20 +282,24 @@ var editorModule = (function () {
 		}		
 	}
 
+	/* Save the current position of the caret */
 	function saveSelection() {
 	    if (window.getSelection) {
 	        sel = window.getSelection();
 	        if (sel.getRangeAt && sel.rangeCount) {
+	    		console.log(sel.getRangeAt(0));
 	            return sel.getRangeAt(0);
 	        }
 	    } 
 	    else if (document.selection && document.selection.createRange) {
+	    	console.log(document.selection.createRange());
 	        return document.selection.createRange();
 	    }
 
 	    return null;
 	}
 
+	/* Close link panel when you click on insert button or inside panel */
 	function hidePanel(e) {
 		let linkContainer = document.getElementById("insert-link"),
 			linkButton = document.getElementById("link");
@@ -278,6 +308,7 @@ var editorModule = (function () {
 		}
 	}
 
+	/* Disable the buttons when the click is outside Editor */
 	function disableTextareaButtons() {
 		document.addEventListener('click', function(e) {
 			let textarea = document.getElementById("textarea"),
