@@ -327,6 +327,24 @@ var editorModule = (function () {
 		});
 	}
 
+	/* Show color palete panel */
+	function toggleColorContainer() {
+		let linkContainer = document.getElementById("color-palete");
+		if(linkContainer.classList.contains("display")) {
+			linkContainer.classList.remove("display");
+		}
+		else if(!document.getElementById("text-color").classList.contains("disabledButton")) {
+			linkContainer.classList.add("display");
+		}
+	}
+
+	function changeColor()
+	{
+		document.getElementById("text-color").addEventListener('click', function(e) {
+			toggleColorContainer();
+		});
+	}
+
 	return {
 		preventDefaultClick: preventDefaultClick,
 		enableBold: enableBold,
@@ -339,7 +357,8 @@ var editorModule = (function () {
 		disableTextareaButtons: disableTextareaButtons,
 		completePreview: completePreview,
 		checkButtonsActive: checkButtonsActive,
-		activateButtons: activateButtons
+		activateButtons: activateButtons,
+		changeColor: changeColor
 	};
 
 })();
