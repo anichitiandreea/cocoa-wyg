@@ -30,7 +30,7 @@ var editorModule = (function () {
 	        e.preventDefault();
 	    });
 
-	     $('#numbered').bind('mousedown',function(e)
+	    $('#numbered').bind('mousedown',function(e)
 	    {
 	        e.preventDefault();
 	    });
@@ -91,6 +91,12 @@ var editorModule = (function () {
 		}
 	}
 
+	function completeWithColor() {
+		var colorPalete = document.getElementById("color-palete");
+		var currentColor = document.getElementById("hex-color");
+		colorPalete.classList.remove("display");
+	}
+
 	/* Check if the button is activated */
 	function checkPreviousState(element) {
 		if(!element.classList.contains("item-active")) {
@@ -109,9 +115,9 @@ var editorModule = (function () {
 		var bullet = document.getElementById("bullet");
 		var numbered = document.getElementById("numbered");
 
-		checkClickedElement(target, "B", bold);
-		checkClickedElement(target, "I", italic);
-		checkClickedElement(target, "U", underline);
+		checkBoldElement(target, "B", bold, "bold");
+		checkItalicElement(target, "I", italic, "italic");
+		checkUnderlineElement(target, "U", underline, "underline");
 
 		checkClickedULElement(target, "LI", bullet);
 		checkClickedOLElement(target, "LI", numbered);
@@ -119,8 +125,14 @@ var editorModule = (function () {
 
 	/* Check if the target clicked is B, I, DIV etc;
 	   If it is true than activate the coresponding button, else disable it */
-	function checkClickedElement(target, tagName, element) {
+	function checkBoldElement(target, tagName, element, fontWeight) {
 		var ok = 1;
+		console.log(target.style.fontWeight);
+		console.log(target);
+		if(target.style.fontWeight == fontWeight) {
+			element.classList.add("item-active");
+			ok = 0;
+		}
 
 		// Check the curent target element
 		if(target.tagName == tagName) {
@@ -134,12 +146,111 @@ var editorModule = (function () {
 	    	ok = 0;
 	    }
 
+	    if(target.firstChild != null && target.firstChild.nodeType != 3) {
+		    if(target.firstChild.style.fontWeight == fontWeight) {
+		    	element.classList.add("item-active");
+		    	ok = 0;
+		    }
+		}
+
 	    var copyTarget = target;
 
 	    // Iterate all the parents of clicked element
 		while(copyTarget.parentNode && copyTarget.parentNode.tagName !== "BODY") {
 		    copyTarget = copyTarget.parentNode;
-		    if(copyTarget.tagName == tagName) {
+		    if(copyTarget.tagName == tagName || copyTarget.style.fontWeight == fontWeight) {
+		    	element.classList.add("item-active");
+		    	ok = 0;
+		    }
+	    }
+
+	    // If none of the targets match the curent tag name than remove the activated button color
+	    if(!target.classList.contains("textarea-content") && ok == 1) {
+			element.classList.remove("item-active");
+		}
+	}
+
+	/* Check if the target clicked is B, I, DIV etc;
+	   If it is true than activate the coresponding button, else disable it */
+	function checkItalicElement(target, tagName, element, fontStyle) {
+		var ok = 1;
+		console.log(target.style.fontStyle);
+		if(target.style.fontStyle == fontStyle) {
+			element.classList.add("item-active");
+			ok = 0;
+		}
+
+		// Check the curent target element
+		if(target.tagName == tagName) {
+			element.classList.add("item-active");
+			ok = 0;
+		}
+
+		// Check the first child of target
+	    if(target.firstChild.tagName == tagName) {
+	    	element.classList.add("item-active");
+	    	ok = 0;
+	    }
+
+	    if(target.firstChild != null && target.firstChild.nodeType != 3) {
+		    if(target.firstChild.style.fontStyle == fontStyle) {
+		    	element.classList.add("item-active");
+		    	ok = 0;
+		    }
+		}
+
+	    var copyTarget = target;
+
+	    // Iterate all the parents of clicked element
+		while(copyTarget.parentNode && copyTarget.parentNode.tagName !== "BODY") {
+		    copyTarget = copyTarget.parentNode;
+		    if(copyTarget.tagName == tagName || copyTarget.style.fontStyle == fontStyle) {
+		    	element.classList.add("item-active");
+		    	ok = 0;
+		    }
+	    }
+
+	    // If none of the targets match the curent tag name than remove the activated button color
+	    if(!target.classList.contains("textarea-content") && ok == 1) {
+			element.classList.remove("item-active");
+		}
+	}
+
+	/* Check if the target clicked is B, I, DIV etc;
+	   If it is true than activate the coresponding button, else disable it */
+	function checkUnderlineElement(target, tagName, element, textDecoration) {
+		var ok = 1;
+		console.log(target.style.textDecoration);
+		if(target.style.textDecoration == textDecoration) {
+			element.classList.add("item-active");
+			ok = 0;
+		}
+
+		// Check the curent target element
+		if(target.tagName == tagName) {
+			element.classList.add("item-active");
+			ok = 0;
+		}
+
+		// Check the first child of target
+	    if(target.firstChild.tagName == tagName) {
+	    	element.classList.add("item-active");
+	    	ok = 0;
+	    }
+
+	    if(target.firstChild != null && target.firstChild.nodeType != 3) {
+		    if(target.firstChild.style.textDecoration == textDecoration) {
+		    	element.classList.add("item-active");
+		    	ok = 0;
+		    }
+		}
+
+	    var copyTarget = target;
+
+	    // Iterate all the parents of clicked element
+		while(copyTarget.parentNode && copyTarget.parentNode.tagName !== "BODY") {
+		    copyTarget = copyTarget.parentNode;
+		    if(copyTarget.tagName == tagName || copyTarget.style.textDecoration == textDecoration) {
 		    	element.classList.add("item-active");
 		    	ok = 0;
 		    }
@@ -223,6 +334,40 @@ var editorModule = (function () {
 	    });
 	}
 
+	function enableTextColor(range, color) {
+		var colorPalete = document.getElementById("color-palete");
+		colorPalete.classList.remove("display");
+		restoreRangePosition();
+		document.execCommand('styleWithCSS', false, true);
+	   	document.execCommand('foreColor', false, color);
+	}
+
+	function changeColor() {
+		let range = null;
+		document.getElementById("text-color").addEventListener('click', function(e) {
+			toggleColorContainer();
+			range = saveSelection();
+			console.log(range)
+			saveRangePosition();
+		});
+
+		document.getElementById("insert-hex").addEventListener('click', function(e) {
+			enableTextColor(range, document.getElementById("hex-color").value);
+		});
+
+		document.addEventListener('click', function(e) {
+			hidePanel(e, "text-color", "color-palete");		});
+	}
+
+	function completeColor(color) {
+		document.getElementById("hex-color").value = color;
+		var colorPalete = document.getElementById("color-palete");
+		colorPalete.classList.remove("display");
+		restoreRangePosition();
+		document.execCommand('styleWithCSS', false, true);
+	   	document.execCommand('foreColor', false, color);
+	}
+
 	/* Add link pipeline */
 	function addLink() {
 		let range = null;
@@ -236,7 +381,7 @@ var editorModule = (function () {
 		});
 
 		document.addEventListener('click', function(e) {
-			hidePanel(e);
+			hidePanel(e, "link", "insert-link");
 		});
 	}
 
@@ -295,11 +440,42 @@ var editorModule = (function () {
 	    return null;
 	}
 
+	function saveRangePosition()
+	  {
+	  	var bE = document.getElementById("textarea");
+	  var range=window.getSelection().getRangeAt(0);
+	  var sC=range.startContainer,eC=range.endContainer;
+
+	  A=[];while(sC!==bE){A.push(getNodeIndex(sC));sC=sC.parentNode}
+	  B=[];while(eC!==bE){B.push(getNodeIndex(eC));eC=eC.parentNode}
+
+	  window.rp={"sC":A,"sO":range.startOffset,"eC":B,"eO":range.endOffset};
+	  }
+
+	  function restoreRangePosition()
+	  {
+	  	var bE = document.getElementById("textarea");
+	  bE.focus();
+	  var sel=window.getSelection(),range=sel.getRangeAt(0);
+	  var x,C,sC=bE,eC=bE;
+
+	  C=rp.sC;x=C.length;while(x--)sC=sC.childNodes[C[x]];
+	  C=rp.eC;x=C.length;while(x--)eC=eC.childNodes[C[x]];
+
+	  range.setStart(sC,rp.sO);
+	  range.setEnd(eC,rp.eO);
+	  sel.removeAllRanges();
+	  sel.addRange(range)
+	  }
+
+	function getNodeIndex(n){var i=0;while(n=n.previousSibling)i++;return i}
+
+
 	/* Close link panel when you click on insert button or inside panel */
-	function hidePanel(e) {
-		let linkContainer = document.getElementById("insert-link"),
-			linkButton = document.getElementById("link");
-		if(linkButton !== e.srcElement.closest("#link") && linkContainer !== e.srcElement.closest("#insert-link")) {
+	function hidePanel(e, button, container) {
+		let linkContainer = document.getElementById(container),
+			linkButton = document.getElementById(button);
+		if(linkButton !== e.srcElement.closest("#" + button) && linkContainer !== e.srcElement.closest("#" + container)) {
 			linkContainer.classList.remove("display");
 		}
 	}
@@ -338,13 +514,6 @@ var editorModule = (function () {
 		}
 	}
 
-	function changeColor()
-	{
-		document.getElementById("text-color").addEventListener('click', function(e) {
-			toggleColorContainer();
-		});
-	}
-
 	return {
 		preventDefaultClick: preventDefaultClick,
 		enableBold: enableBold,
@@ -358,7 +527,9 @@ var editorModule = (function () {
 		completePreview: completePreview,
 		checkButtonsActive: checkButtonsActive,
 		activateButtons: activateButtons,
-		changeColor: changeColor
+		changeColor: changeColor,
+		enableTextColor: enableTextColor,
+		completeColor: completeColor
 	};
 
 })();
