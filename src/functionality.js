@@ -123,12 +123,11 @@ var editorModule = (function () {
 		checkClickedOLElement(target, "LI", numbered);
 	}
 
-	/* Check if the target clicked is B, I, DIV etc;
+	/* Check if the target clicked is B etc;
 	   If it is true than activate the coresponding button, else disable it */
 	function checkBoldElement(target, tagName, element, fontWeight) {
 		var ok = 1;
-		console.log(target.style.fontWeight);
-		console.log(target);
+
 		if(target.style.fontWeight == fontWeight) {
 			element.classList.add("item-active");
 			ok = 0;
@@ -170,11 +169,11 @@ var editorModule = (function () {
 		}
 	}
 
-	/* Check if the target clicked is B, I, DIV etc;
+	/* Check if the target clicked is I etc;
 	   If it is true than activate the coresponding button, else disable it */
 	function checkItalicElement(target, tagName, element, fontStyle) {
 		var ok = 1;
-		console.log(target.style.fontStyle);
+
 		if(target.style.fontStyle == fontStyle) {
 			element.classList.add("item-active");
 			ok = 0;
@@ -216,11 +215,11 @@ var editorModule = (function () {
 		}
 	}
 
-	/* Check if the target clicked is B, I, DIV etc;
+	/* Check if the target clicked is U etc;
 	   If it is true than activate the coresponding button, else disable it */
 	function checkUnderlineElement(target, tagName, element, textDecoration) {
 		var ok = 1;
-		console.log(target.style.textDecoration);
+
 		if(target.style.textDecoration == textDecoration) {
 			element.classList.add("item-active");
 			ok = 0;
@@ -334,6 +333,7 @@ var editorModule = (function () {
 	    });
 	}
 
+	/* Add the color to the current (selected) text */
 	function enableTextColor(range, color) {
 		var colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
@@ -342,6 +342,7 @@ var editorModule = (function () {
 	   	document.execCommand('foreColor', false, color);
 	}
 
+	/* Begin change of text color implementation */
 	function changeColor() {
 		let range = null;
 		document.getElementById("text-color").addEventListener('click', function(e) {
@@ -359,6 +360,7 @@ var editorModule = (function () {
 			hidePanel(e, "text-color", "color-palete");		});
 	}
 
+	/* Complete with default colors */
 	function completeColor(color) {
 		document.getElementById("hex-color").value = color;
 		var colorPalete = document.getElementById("color-palete");
@@ -440,36 +442,44 @@ var editorModule = (function () {
 	    return null;
 	}
 
+	/* Save curent position */
 	function saveRangePosition()
-	  {
+	{
 	  	var bE = document.getElementById("textarea");
-	  var range=window.getSelection().getRangeAt(0);
-	  var sC=range.startContainer,eC=range.endContainer;
+		var range=window.getSelection().getRangeAt(0);
+		var sC=range.startContainer,eC=range.endContainer;
 
-	  A=[];while(sC!==bE){A.push(getNodeIndex(sC));sC=sC.parentNode}
-	  B=[];while(eC!==bE){B.push(getNodeIndex(eC));eC=eC.parentNode}
+		A=[];while(sC!==bE){A.push(getNodeIndex(sC));sC=sC.parentNode}
+		B=[];while(eC!==bE){B.push(getNodeIndex(eC));eC=eC.parentNode}
 
-	  window.rp={"sC":A,"sO":range.startOffset,"eC":B,"eO":range.endOffset};
-	  }
+		window.rp={"sC":A,"sO":range.startOffset,"eC":B,"eO":range.endOffset};
+	}
 
-	  function restoreRangePosition()
-	  {
-	  	var bE = document.getElementById("textarea");
-	  bE.focus();
-	  var sel=window.getSelection(),range=sel.getRangeAt(0);
-	  var x,C,sC=bE,eC=bE;
+	/* Restore last position of range */
+	function restoreRangePosition()
+	{
+		var bE = document.getElementById("textarea");
+		bE.focus();
+		var sel=window.getSelection(),range=sel.getRangeAt(0);
+		var x,C,sC=bE,eC=bE;
 
-	  C=rp.sC;x=C.length;while(x--)sC=sC.childNodes[C[x]];
-	  C=rp.eC;x=C.length;while(x--)eC=eC.childNodes[C[x]];
+		C=rp.sC;x=C.length;while(x--)sC=sC.childNodes[C[x]];
+		C=rp.eC;x=C.length;while(x--)eC=eC.childNodes[C[x]];
 
-	  range.setStart(sC,rp.sO);
-	  range.setEnd(eC,rp.eO);
-	  sel.removeAllRanges();
-	  sel.addRange(range)
-	  }
+		range.setStart(sC,rp.sO);
+		range.setEnd(eC,rp.eO);
+		sel.removeAllRanges();
+		sel.addRange(range);		
+	}
 
-	function getNodeIndex(n){var i=0;while(n=n.previousSibling)i++;return i}
+	function getNodeIndex(n){
+		var i=0;
+		while(n=n.previousSibling) {
+			i++;
+		}
 
+		return i;
+	}
 
 	/* Close link panel when you click on insert button or inside panel */
 	function hidePanel(e, button, container) {
