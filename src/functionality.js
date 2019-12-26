@@ -337,7 +337,9 @@ var editorModule = (function () {
 	function enableTextColor(range, color) {
 		var colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
+
 		restoreRangePosition();
+
 		document.execCommand('styleWithCSS', false, true);
 	   	document.execCommand('foreColor', false, color);
 	}
@@ -348,7 +350,6 @@ var editorModule = (function () {
 		document.getElementById("text-color").addEventListener('click', function(e) {
 			toggleColorContainer();
 			range = saveSelection();
-			console.log(range)
 			saveRangePosition();
 		});
 
@@ -365,7 +366,9 @@ var editorModule = (function () {
 		document.getElementById("hex-color").value = color;
 		var colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
+
 		restoreRangePosition();
+
 		document.execCommand('styleWithCSS', false, true);
 	   	document.execCommand('foreColor', false, color);
 	}
@@ -419,7 +422,7 @@ var editorModule = (function () {
 
 		if(container.id == "textarea" || container.parentNode.closest("#textarea")) {
 			range.insertNode(createA);
-			createA.after( document.createTextNode("\u00A0") );
+			createA.after(document.createTextNode("\u00A0"));
 		}
 		else {
 			document.getElementById("textarea").innerHTML += displayText;
@@ -445,36 +448,67 @@ var editorModule = (function () {
 	/* Save curent position */
 	function saveRangePosition()
 	{
-	  	var bE = document.getElementById("textarea");
-		var range=window.getSelection().getRangeAt(0);
-		var sC=range.startContainer,eC=range.endContainer;
+	  	var textarea = document.getElementById("textarea");
+		var range = window.getSelection().getRangeAt(0);
 
-		A=[];while(sC!==bE){A.push(getNodeIndex(sC));sC=sC.parentNode}
-		B=[];while(eC!==bE){B.push(getNodeIndex(eC));eC=eC.parentNode}
+		var start = range.startContainer,
+			end = range.endContainer;
 
-		window.rp={"sC":A,"sO":range.startOffset,"eC":B,"eO":range.endOffset};
+		A=[];
+
+		while(start !== textarea) {
+			A.push(getNodeIndex(start));
+			start = start.parentNode;
+		}
+
+		B=[];
+
+		while(end !== textarea) {
+			B.push(getNodeIndex(end));
+			end = end.parentNode;
+		}
+
+		window.response = {"startContainer":A, "startOffset":range.startOffset, "endContainer":B, "endOffset":range.endOffset};
 	}
 
 	/* Restore last position of range */
 	function restoreRangePosition()
 	{
-		var bE = document.getElementById("textarea");
-		bE.focus();
-		var sel=window.getSelection(),range=sel.getRangeAt(0);
-		var x,C,sC=bE,eC=bE;
+		var textarea = document.getElementById("textarea");
+		textarea.focus();
 
-		C=rp.sC;x=C.length;while(x--)sC=sC.childNodes[C[x]];
-		C=rp.eC;x=C.length;while(x--)eC=eC.childNodes[C[x]];
+		var selection = window.getSelection(),
+			range = selection.getRangeAt(0);
 
-		range.setStart(sC,rp.sO);
-		range.setEnd(eC,rp.eO);
-		sel.removeAllRanges();
-		sel.addRange(range);		
+		var length, 
+			container, 
+			startContainer = textarea, 
+			endContainer = textarea;
+
+		container = response.startContainer;
+		length = container.length;
+
+		while(length--) {
+			startContainer = startContainer.childNodes[container[length]];
+		}
+
+		container = response.endContainer;
+		length = container.length;
+
+		while(length--) {
+			endContainer = endContainer.childNodes[container[length]];
+		}
+
+		range.setStart(startContainer, response.startOffset);
+		range.setEnd(endContainer, response.endOffset);
+
+		selection.removeAllRanges();
+		selection.addRange(range);		
 	}
 
-	function getNodeIndex(n){
+	function getNodeIndex(n) {
 		var i=0;
-		while(n=n.previousSibling) {
+		while(n = n.previousSibling) {
 			i++;
 		}
 
