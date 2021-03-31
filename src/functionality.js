@@ -107,7 +107,7 @@ var editorModule = (function () {
 		}
 	}
 
-	/* Check for every click if the current cursor position is inside bold, italic, etc;*/ 
+	/* Check for every click if the current cursor position is inside bold, italic, etc;*/
 	function checkButtonsActive(target) {
 		var bold = document.getElementById("bold");
 		var italic = document.getElementById("italic");
@@ -413,7 +413,7 @@ var editorModule = (function () {
 		    createAText = document.createTextNode(text);
 	    createA.setAttribute('href', url);
 	    createA.setAttribute('id', 'myUrl');
-	    createA.appendChild(createAText);	
+	    createA.appendChild(createAText);
 
 	    let displayText = "<a href='" + url + "' id='myUrl'>" + text + "</a>";
 
@@ -427,7 +427,7 @@ var editorModule = (function () {
 		else {
 			document.getElementById("textarea").innerHTML += displayText;
 			document.getElementById("textarea").innerHTML += '&nbsp;';
-		}		
+		}
 	}
 
 	/* Save the current position of the caret */
@@ -437,7 +437,7 @@ var editorModule = (function () {
 	        if (sel.getRangeAt && sel.rangeCount) {
 	            return sel.getRangeAt(0);
 	        }
-	    } 
+	    }
 	    else if (document.selection && document.selection.createRange) {
 	        return document.selection.createRange();
 	    }
@@ -480,9 +480,9 @@ var editorModule = (function () {
 		var selection = window.getSelection(),
 			range = selection.getRangeAt(0);
 
-		var length, 
-			container, 
-			startContainer = textarea, 
+		var length,
+			container,
+			startContainer = textarea,
 			endContainer = textarea;
 
 		container = response.startContainer;
@@ -503,7 +503,7 @@ var editorModule = (function () {
 		range.setEnd(endContainer, response.endOffset);
 
 		selection.removeAllRanges();
-		selection.addRange(range);		
+		selection.addRange(range);
 	}
 
 	function getNodeIndex(n) {
