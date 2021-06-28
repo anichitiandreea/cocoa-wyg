@@ -4,11 +4,17 @@ export class Editor {
 	constructor(selector) {
 		this.selector = selector;
 		this.buildEditor();
-		this.preventDefaultClick();
+		Editor.preventDefaultClick();
 		this.disableTextareaButtons();
 		this.activateButtons();
 		this.addLink();
 		//this.changeColor();
+
+		document.getElementById("bold").addEventListener('click', this.enableBold, false);
+		document.getElementById("italic").addEventListener('click', this.enableItalic, false);
+		document.getElementById("underline").addEventListener('click', this.enableUnderline, false);
+		document.getElementById("bullet").addEventListener('click', this.enableBulleted, false);
+		document.getElementById("numbered").addEventListener('click', this.enableNumbered, false);
 	}
 
 	buildEditor() {
@@ -18,11 +24,11 @@ export class Editor {
 	        <div class="textarea-content">
 	            <div class="textarea-menu" id="editor-menu">
 	                <ul class="textarea-ul">
-	                    <li><button onclick="editor.enableBold();" class="disabledButton" type="button" id="bold" title="Bold"><i class="fas fa-bold"></i></button></li>
-	                    <li><button onclick="editor.enableItalic();" class="disabledButton" type="button" id="italic" title="Italic"><i class="fas fa-italic"></i></button></li>
-	                    <li><button onclick="editor.enableUnderline();" class="disabledButton" id="underline" type="button" title="Underline"><i class="fas fa-underline"></i></button></li>
-	                    <li><button onclick="editor.enableBulleted();" class="disabledButton" id="bullet" type="button" title="Bulleted list"><i class="fas fa-list"></i></button></li>
-	                    <li><button onclick="editor.enableNumbered();" class="disabledButton" id="numbered" type="button" title="Numbered list"><i class="fas fa-list-ol"></i></button></li>
+	                    <li><button class="disabledButton" type="button" id="bold" title="Bold"><i class="fas fa-bold"></i></button></li>
+	                    <li><button class="disabledButton" type="button" id="italic" title="Italic"><i class="fas fa-italic"></i></button></li>
+	                    <li><button class="disabledButton" id="underline" type="button" title="Underline"><i class="fas fa-underline"></i></button></li>
+	                    <li><button class="disabledButton" id="bullet" type="button" title="Bulleted list"><i class="fas fa-list"></i></button></li>
+	                    <li><button class="disabledButton" id="numbered" type="button" title="Numbered list"><i class="fas fa-list-ol"></i></button></li>
 	                    <li>
 	                        <button type="button" class="hyperlink disabledButton" title="Hyperlink" id="link"><i class="fas fa-link"></i></button>
 	                        <div id="insert-link">
@@ -53,7 +59,7 @@ export class Editor {
  	}
 
  	/* Prevent the current click to follow the link path */
-	preventDefaultClick() {
+	static preventDefaultClick() {
 		$('#bold').bind('mousedown',function(e)
 	    {
 	        e.preventDefault();
@@ -82,56 +88,56 @@ export class Editor {
 
 	/* Enable bold for the typed text */
 	enableBold() {
-		this.preventDefaultClick();
+		Editor.preventDefaultClick();
 		var bold = document.getElementById("bold");
 
 		if (!bold.classList.contains("disabledButton")) {
 			document.execCommand('bold');
-			this.checkPreviousState(bold);
+			Editor.checkPreviousState(bold);
 		}
 	}
 
 	/* Enable italic for the typed text */
 	enableItalic() {
-		this.preventDefaultClick();
+		Editor.preventDefaultClick();
 		var italic = document.getElementById("italic");
 
 		if (!italic.classList.contains("disabledButton")) {
 			document.execCommand('italic');
-			this.checkPreviousState(italic);
+			Editor.checkPreviousState(italic);
 		}
 	}
 
 	/* Enable underline for the typed text */
 	enableUnderline() {
-		this.preventDefaultClick();
+		Editor.preventDefaultClick();
 		var underline = document.getElementById("underline");
 
 		if (!underline.classList.contains("disabledButton")) {
 			document.execCommand('underline');
-			this.checkPreviousState(underline);
+			Editor.checkPreviousState(underline);
 		}
 	}
 
 	/* Enable buleted list for the typed text */
 	enableBulleted() {
-		this.preventDefaultClick();
+		Editor.preventDefaultClick();
 		var bullet = document.getElementById("bullet");
 
 		if (!bullet.classList.contains("disabledButton")) {
 			document.execCommand('insertUnorderedList', false, null);
-			this.checkPreviousState(bullet);
+			Editor.checkPreviousState(bullet);
 		}
 	}
 
 	/* Enable numbered list for the typed text */
 	enableNumbered() {
-		this.preventDefaultClick();
+		Editor.preventDefaultClick();
 		var numbered = document.getElementById("numbered");
 
 		if (!numbered.classList.contains("disabledButton")) {
 			document.execCommand('insertOrderedList', false, null);
-			this.checkPreviousState(numbered);
+			Editor.checkPreviousState(numbered);
 		}
 	}
 
@@ -142,7 +148,7 @@ export class Editor {
 	}
 
 	/* Check if the button is activated */
-	checkPreviousState(element) {
+	static checkPreviousState(element) {
 		if (!element.classList.contains("item-active")) {
 			element.classList.add("item-active");
 		}
