@@ -1,7 +1,7 @@
 {
-  "name": "editor",
+  "name": "@andreea.anichiti/editor",
   "version": "1.0.0",
-  "description": "My first Gulp app.",
+  "description": "My new WYSIWYG editor.",
   "main": "functionality.js",
   "scripts": {
     "test": "gulp-test"
