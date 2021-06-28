@@ -9,79 +9,13 @@
         href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../src/functionality.js"></script>
 </head>
 <body>
-    <div style="display: flex;flex-direction: column;justify-content: center;align-items: center;height: 100%;">
-    <div class="textarea-content">
-        <div class="textarea-menu" id="editor-menu">
-            <ul class="textarea-ul">
-                <li><button onclick="editorModule.enableBold();" class="disabledButton" type="button" id="bold" title="Bold"><i class="fas fa-bold"></i></button></li>
-                <li><button onclick="editorModule.enableItalic();" class="disabledButton" type="button" id="italic" title="Italic"><i class="fas fa-italic"></i></button></li>
-                <li><button onclick="editorModule.enableUnderline();" class="disabledButton" id="underline" type="button" title="Underline"><i class="fas fa-underline"></i></button></li>
-                <li><button onclick="editorModule.enableBulleted();" class="disabledButton" id="bullet" type="button" title="Bulleted list"><i class="fas fa-list"></i></button></li>
-                <li><button onclick="editorModule.enableNumbered();" class="disabledButton" id="numbered" type="button" title="Numbered list"><i class="fas fa-list-ol"></i></button></li>
-                <li>
-                    <button type="button" class="hyperlink disabledButton" title="Hyperlink" id="link"><i class="fas fa-link"></i></button>
-                    <div id="insert-link">
-                        <input type="text" placeholder="URL" id="url" autocomplete="off" class="link-input">
-                        <input type="text" placeholder="Text" id="text" autocomplete="off" class="link-input" style="margin-bottom: 0;">
-                        <div class="submit" style="width: 100%;">
-                            <input type="button" value="Insert" id="insert">
-                        </div>
-                    </div>
-                </li>
-                <li><button class="disabledButton" type="button" id="text-color" title="Text color"><i class="fas fa-font"></i><i style="margin-left: 5px;" class="fas fa-angle-down"></i></button>
-                	<div id="color-palete">
-                		<div>
-                        	<span class="color-option" style="background-color: #7CC791;" onclick="editorModule.completeColor('#7CC791');"></span>
-                        	<span class="color-option" style="background-color: #8184D6;" onclick="editorModule.completeColor('#8184D6');"></span>
-                        	<span class="color-option" style="background-color: #D9D470;" onclick="editorModule.completeColor('#D9D470');"></span>
-                        	<span class="color-option" style="background-color: #E16E6E;" onclick="editorModule.completeColor('#E16E6E');"></span>
-                        	<span class="color-option" style="background-color: #B880CD;" onclick="editorModule.completeColor('#B880CD');"></span>
-                        </div>
-                        <div>
-                        	<span class="color-option" style="background-color: #32a854;" onclick="editorModule.completeColor('#32a854');"></span>
-                        	<span class="color-option" style="background-color: #393ebf;" onclick="editorModule.completeColor('#393ebf');"></span>
-                        	<span class="color-option" style="background-color: #c4bc1f;" onclick="editorModule.completeColor('#c4bc1f');"></span>
-                        	<span class="color-option" style="background-color: #cf1d1d;" onclick="editorModule.completeColor('#cf1d1d');"></span>
-                        	<span class="color-option" style="background-color: #9038b0;" onclick="editorModule.completeColor('#9038b0');"></span>
-                        </div>
-                        <div>
-                        	<span class="color-option" style="background-color: #206B36;" onclick="editorModule.completeColor('#206B36');"></span>
-                        	<span class="color-option" style="background-color: #25287A;" onclick="editorModule.completeColor('#25287A');"></span>
-                        	<span class="color-option" style="background-color: #7E7814;" onclick="editorModule.completeColor('#7E7814');"></span>
-                        	<span class="color-option" style="background-color: #851212;" onclick="editorModule.completeColor('#851212');"></span>
-                        	<span class="color-option" style="background-color: #5C2471;" onclick="editorModule.completeColor('#5C2471');"></span>
-                        </div>
-                        <div>
-                        	<span class="color-option" style="background-color: #F8F8F8;" onclick="editorModule.completeColor('#F8F8F8');"></span>
-                        	<span class="color-option" style="background-color: #B0B0B0;" onclick="editorModule.completeColor('#B0B0B0');"></span>
-                        	<span class="color-option" style="background-color: #585858;" onclick="editorModule.completeColor('#585858');"></span>
-                        	<span class="color-option" style="background-color: #282828;" onclick="editorModule.completeColor('#282828');"></span>
-                        	<span class="color-option" style="background-color: #181818;" onclick="editorModule.completeColor('#181818');"></span>
-                        </div>
-                        <div>
-                        	<input style="margin-top: 10px;" type="text" placeholder="HEX" id="hex-color" autocomplete="off" class="link-input">
-                        	<input type="button" value="Ok" id="insert-hex">
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div id="textarea" spellcheck="false" contentEditable=true class="description" onkeyup="editorModule.completePreview();" data-text="Description" style="outline: none;">
-        </div>
-        <textarea id="textarea-real" name="details" style="display: none;"></textarea>
-    </div>
-    <div class="preview" id="preview"></div>
-    </div>
+    <textarea id="textarea-real"></textarea>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- <script src="../src/functionality.js"></script>
 <script>
-    editorModule.preventDefaultClick();
-    editorModule.addLink();
-    editorModule.disableTextareaButtons();
-    editorModule.activateButtons();
-    editorModule.changeColor();
+    var editor = new Editor("textarea-real");
 </script>
 </html>
