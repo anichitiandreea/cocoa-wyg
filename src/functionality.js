@@ -1,6 +1,6 @@
 /*** WYSIWYG EDITOR ***/
 
-export class Editor {
+module.exports = Editor = class Editor {
 	constructor(selector) {
 		this.selector = selector;
 		this.buildEditor();
