@@ -2,7 +2,7 @@
   "name": "@andreea.anichiti/editor",
   "version": "1.0.2",
   "description": "My new WYSIWYG editor.",
-  "main": "./src/functionality.js",
+  "main": "index.js",
   "scripts": {
     "test": "gulp-test"
   },
