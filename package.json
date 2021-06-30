@@ -1,14 +1,14 @@
 {
-  "name": "@andreea.anichiti/editor",
+  "name": "cocoa-wyg",
   "version": "1.0.3",
-  "description": "My new WYSIWYG editor.",
+  "description": "A lightweight WYSIWYG editor written in javascript.",
   "main": "index.js",
   "scripts": {
     "test": "gulp-test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anichitiandreea/Editor.git"
+    "url": "git+https://github.com/anichitiandreea/cocoa-wyg.git"
   },
   "keywords": [
     "editor"
@@ -16,9 +16,9 @@
   "author": "Anichiti Andreea",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/anichitiandreea/Editor/issues"
+    "url": "https://github.com/anichitiandreea/cocoa-wyg/issues"
   },
-  "homepage": "https://github.com/anichitiandreea/Editor#readme",
+  "homepage": "https://github.com/anichitiandreea/cocoa-wyg#readme",
   "devDependencies": {
     "gulp": "^4.0.2"
   },
