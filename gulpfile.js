@@ -2,7 +2,12 @@
 
 const
   // modules
-  gulp = require('gulp'),
+  browserify = require('browserify');
+  babelify = require('babelify')
+  gulp = require('gulp');
+  source = require('vinyl-source-stream');
+
+  var svg = require('svg-browserify');
 
   // development mode?
   devBuild = (process.env.NODE_ENV !== 'production'),
@@ -19,7 +24,6 @@ const
 
   // CSS processing
 function css() {
-
   return gulp.src(src + '/styles.sass')
     .pipe(sass({
       outputStyle: 'nested',
@@ -30,15 +34,26 @@ function css() {
       cssnano
     ]))
     .pipe(gulp.dest(build + 'css/'));
-
 }
+
+var bundleTask = function() {
+  return browserify('index.js')
+    .transform(babelify, {presets: ["@babel/preset-env"]})
+    .transform(svg)
+    .transform(require('browserify-css'))
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest('build/'));
+};
+
+gulp.task('bundle', bundleTask);
+
 exports.css = gulp.series(css);
 
 exports.build = gulp.parallel(exports.css);
 
 // watch for file changes
 function watch(done) {
-
   // css changes
   gulp.watch(src + '/styles.sass', css);
 
