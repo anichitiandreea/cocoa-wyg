@@ -2,7 +2,7 @@
   "name": "cocoa-wyg",
   "version": "1.0.4",
   "description": "A lightweight WYSIWYG editor written in javascript.",
-  "main": "index.js",
+  "main": "../build/bundle.js",
   "scripts": {
     "test": "gulp-test"
   },
