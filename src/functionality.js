@@ -1,6 +1,13 @@
 /*** WYSIWYG EDITOR ***/
 
-module.exports = Editor = class Editor {
+import * as bold from './icons/bold.svg';
+import * as italic from './icons/italic.svg';
+import * as underline from './icons/underline.svg';
+import * as link from './icons/link.svg';
+import * as unorderedList from './icons/list2.svg';
+import * as orderedList from './icons/list-numbered.svg';
+
+module.exports = class Editor {
 	constructor(selector) {
 		this.selector = selector;
 		this.buildEditor();
@@ -24,13 +31,13 @@ module.exports = Editor = class Editor {
 	        <div class="textarea-content">
 	            <div class="textarea-menu" id="editor-menu">
 	                <ul class="textarea-ul">
-	                    <li><button class="disabledButton" type="button" id="bold" title="Bold"><i class="fas fa-bold"></i></button></li>
-	                    <li><button class="disabledButton" type="button" id="italic" title="Italic"><i class="fas fa-italic"></i></button></li>
-	                    <li><button class="disabledButton" id="underline" type="button" title="Underline"><i class="fas fa-underline"></i></button></li>
-	                    <li><button class="disabledButton" id="bullet" type="button" title="Bulleted list"><i class="fas fa-list"></i></button></li>
-	                    <li><button class="disabledButton" id="numbered" type="button" title="Numbered list"><i class="fas fa-list-ol"></i></button></li>
+	                    <li><button class="disabledButton" type="button" id="bold" title="Bold">` + bold.default + `</button></li>
+	                    <li><button class="disabledButton" type="button" id="italic" title="Italic">` + italic.default + `</button></li>
+	                    <li><button class="disabledButton" id="underline" type="button" title="Underline">` + underline.default + `</button></li>
+	                    <li><button class="disabledButton" id="bullet" type="button" title="Bulleted list">` + unorderedList.default + `</button></li>
+	                    <li><button class="disabledButton" id="numbered" type="button" title="Numbered list">` + orderedList.default + `</button></li>
 	                    <li>
-	                        <button type="button" class="hyperlink disabledButton" title="Hyperlink" id="link"><i class="fas fa-link"></i></button>
+	                        <button type="button" class="hyperlink disabledButton" title="Hyperlink" id="link">` + link.default + `</button>
 	                        <div id="insert-link">
 	                            <input type="text" placeholder="URL" id="url" autocomplete="off" class="link-input">
 	                            <input type="text" placeholder="Text" id="text" autocomplete="off" class="link-input" style="margin-bottom: 0;">
