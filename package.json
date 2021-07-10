@@ -2,9 +2,10 @@
   "name": "cocoa-wyg",
   "version": "1.0.6",
   "description": "A lightweight WYSIWYG editor written in javascript.",
-  "main": "build/bundle.js",
+  "main": "dist/bundle.min.js",
   "scripts": {
-    "test": "gulp-test"
+    "test": "gulp-test",
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,8 @@
     "browserify-css": "^0.15.0",
     "esmify": "^2.1.1",
     "gulp": "^4.0.2",
+    "gulp-uglify": "^3.0.2",
+    "readable-stream": "^3.6.0",
     "svgify": "0.0.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
@@ -35,12 +38,14 @@
     "cssnano": "^4.1.11",
     "glob-parent": "^6.0.0",
     "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.1.1",
     "is-svg": "^4.3.1",
     "jquery": "^3.6.0",
     "normalize-url": "^6.1.0",
     "postcss": "^8.3.5",
     "postcss-assets": "^5.0.0",
+    "save-dev": "0.0.1-security",
     "svg-browserify": "0.0.2",
     "trim-newlines": "^4.0.2",
     "yargs-parser": "^20.2.9"

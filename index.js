@@ -1,4 +1,4 @@
-import css from './build/css/styles.css';
+import css from './dist/styles.min.css';
 import $ from "jquery";
 import editor from './src/functionality.js'
 

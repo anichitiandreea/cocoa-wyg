@@ -4,23 +4,24 @@ const
   // modules
   browserify = require('browserify');
   babelify = require('babelify')
-  gulp = require('gulp');
-  source = require('vinyl-source-stream');
-
-  var svg = require('svg-browserify');
+  gulp = require('gulp')
+  source = require('vinyl-source-stream')
+  svg = require('svg-browserify'),
+  buffer = require('vinyl-buffer');
 
   // development mode?
   devBuild = (process.env.NODE_ENV !== 'production'),
 
   // folders
   src = 'src/',
-  build = 'build/';
+  build = 'dist/';
 
-  const sass = require('gulp-sass'),
+const
+  sass = require('gulp-sass'),
   postcss = require('gulp-postcss'),
-  assets = require('postcss-assets'),
-  autoprefixer = require('autoprefixer'),
-  cssnano = require('cssnano');
+  cssnano = require('cssnano'),
+  rename = require('gulp-rename'),
+  uglify = require('gulp-uglify');
 
   // CSS processing
 function css() {
@@ -29,11 +30,13 @@ function css() {
       outputStyle: 'nested',
       precision: 3,
       errLogToConsole: true
-    }).on('error', sass.logError))
+    })
+    .on('error', sass.logError))
     .pipe(postcss([
       cssnano
     ]))
-    .pipe(gulp.dest(build + 'css/'));
+    .pipe(rename('styles.min.css'))
+    .pipe(gulp.dest(build + '/'));
 }
 
 var bundleTask = function() {
@@ -43,14 +46,19 @@ var bundleTask = function() {
     .transform(require('browserify-css'))
     .bundle()
     .pipe(source('bundle.js'))
-    .pipe(gulp.dest('build/'));
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest('dist'));
 };
 
 gulp.task('bundle', bundleTask);
 
 exports.css = gulp.series(css);
+exports.bundleTask = gulp.series(bundleTask);
 
-exports.build = gulp.parallel(exports.css);
+// run css and bundle tasks synchronously
+exports.build = gulp.series(exports.css, exports.bundleTask);
 
 // watch for file changes
 function watch(done) {
@@ -63,4 +71,4 @@ function watch(done) {
 exports.watch = watch;
 
 // default task
-exports.default = gulp.series(exports.css, exports.watch);
+exports.default = gulp.series(exports.build, exports.watch);
