@@ -6,8 +6,14 @@ import * as underline from './icons/underline.svg';
 import * as link from './icons/link.svg';
 import * as unorderedList from './icons/list2.svg';
 import * as orderedList from './icons/list-numbered.svg';
+import * as droplet from './icons/droplet.svg';
 
-module.exports = class Editor {
+class Editor {
+	startContainer = [];
+	startOffset = 0;
+	endContainer = [];
+	endOffset = 0;
+
 	constructor(selector) {
 		this.selector = selector;
 		this.buildEditor();
@@ -15,13 +21,18 @@ module.exports = class Editor {
 		this.disableTextareaButtons();
 		this.activateButtons();
 		this.addLink();
-		//this.changeColor();
+		this.changeColor();
 
 		document.getElementById("bold").addEventListener('click', this.enableBold, false);
 		document.getElementById("italic").addEventListener('click', this.enableItalic, false);
 		document.getElementById("underline").addEventListener('click', this.enableUnderline, false);
 		document.getElementById("bullet").addEventListener('click', this.enableBulleted, false);
 		document.getElementById("numbered").addEventListener('click', this.enableNumbered, false);
+
+		var elements = document.getElementById("color-palete").children;
+		for (let index = 0; index < elements.length-1; index++) {
+			elements[index].addEventListener('click', function(){Editor.completeColor(elements[index].style.backgroundColor)}, false);
+		}
 	}
 
 	buildEditor() {
@@ -46,6 +57,34 @@ module.exports = class Editor {
 	                            </div>
 	                        </div>
 	                    </li>
+						<li><button class="disabledButton" type="button" id="text-color" title="Text color">` + droplet.default + `</button>
+							<div id="color-palete">
+									<span class="color-option" style="background-color: #7CC791;"></span>
+									<span class="color-option" style="background-color: #8184D6;"></span>
+									<span class="color-option" style="background-color: #D9D470;"></span>
+									<span class="color-option" style="background-color: #E16E6E;"></span>
+									<span class="color-option" style="background-color: #B880CD;"></span>
+									<span class="color-option" style="background-color: #32a854;"></span>
+									<span class="color-option" style="background-color: #393ebf;"></span>
+									<span class="color-option" style="background-color: #c4bc1f;"></span>
+									<span class="color-option" style="background-color: #cf1d1d;"></span>
+									<span class="color-option" style="background-color: #9038b0;"></span>
+									<span class="color-option" style="background-color: #206B36;"></span>
+									<span class="color-option" style="background-color: #25287A;"></span>
+									<span class="color-option" style="background-color: #7E7814;"></span>
+									<span class="color-option" style="background-color: #851212;"></span>
+									<span class="color-option" style="background-color: #5C2471;"></span>
+									<span class="color-option" style="background-color: #F8F8F8;"></span>
+									<span class="color-option" style="background-color: #B0B0B0;"></span>
+									<span class="color-option" style="background-color: #585858;"></span>
+									<span class="color-option" style="background-color: #282828;"></span>
+									<span class="color-option" style="background-color: #181818;"></span>
+								<div>
+									<input style="margin-top: 10px;" type="text" placeholder="HEX" id="hex-color" autocomplete="off" class="link-input">
+									<input type="button" value="Ok" id="insert-hex">
+								</div>
+							</div>
+						</li>
 	                </ul>
 	            </div>
 	            <div id="textarea" spellcheck="false" contentEditable=true class="description" data-text="Description" style="outline: none;"></div>
@@ -57,13 +96,6 @@ module.exports = class Editor {
 
 		textarea.parentNode.replaceChild(editor, textarea);
 	}
-
-	/* Complete preview with the text from the Editor */
- 	completePreview() {
- 		var text = document.getElementById("textarea");
- 		var preview = document.getElementById("preview");
- 		preview.innerHTML = text.innerHTML;
- 	}
 
  	/* Prevent the current click to follow the link path */
 	static preventDefaultClick() {
@@ -392,11 +424,11 @@ module.exports = class Editor {
 	}
 
 	/* Add the color to the current (selected) text */
-	enableTextColor(range, color) {
+	static enableTextColor(range, color) {
 		var colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
 
-		this.restoreRangePosition();
+		Editor.restoreRangePosition();
 
 		document.execCommand('styleWithCSS', false, true);
 	   	document.execCommand('foreColor', false, color);
@@ -406,26 +438,27 @@ module.exports = class Editor {
 	changeColor() {
 		let range = null;
 		document.getElementById("text-color").addEventListener('click', function(e) {
-			toggleColorContainer();
-			range = saveSelection();
-			saveRangePosition();
+			Editor.toggleColorContainer();
+			range = Editor.saveSelection();
+			Editor.saveRangePosition();
 		});
 
 		document.getElementById("insert-hex").addEventListener('click', function(e) {
-			enableTextColor(range, document.getElementById("hex-color").value);
+			Editor.enableTextColor(range, document.getElementById("hex-color").value);
 		});
 
 		document.addEventListener('click', function(e) {
-			hidePanel(e, "text-color", "color-palete");		});
+			Editor.hidePanel(e, "text-color", "color-palete");
+		});
 	}
 
 	/* Complete with default colors */
-	completeColor(color) {
+	static completeColor(color) {
 		document.getElementById("hex-color").value = color;
 		var colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
 
-		restoreRangePosition();
+		Editor.restoreRangePosition();
 
 		document.execCommand('styleWithCSS', false, true);
 	   	document.execCommand('foreColor', false, color);
@@ -504,7 +537,7 @@ module.exports = class Editor {
 	}
 
 	/* Save curent position */
-	saveRangePosition()
+	static saveRangePosition()
 	{
 	  	var textarea = document.getElementById("textarea");
 		var range = window.getSelection().getRangeAt(0);
@@ -512,25 +545,28 @@ module.exports = class Editor {
 		var start = range.startContainer,
 			end = range.endContainer;
 
-		A=[];
+		let A=[];
 
 		while (start !== textarea) {
-			A.push(getNodeIndex(start));
+			A.push(Editor.getNodeIndex(start));
 			start = start.parentNode;
 		}
 
-		B=[];
+		let B=[];
 
 		while (end !== textarea) {
-			B.push(getNodeIndex(end));
+			B.push(Editor.getNodeIndex(end));
 			end = end.parentNode;
 		}
 
-		window.response = {"startContainer":A, "startOffset":range.startOffset, "endContainer":B, "endOffset":range.endOffset};
+		this.startContainer = A;
+		this.startOffset = range.startOffset;
+		this.endContainer = B;
+		this.endOffset = range.endOffset;
 	}
 
 	/* Restore last position of range */
-	restoreRangePosition()
+	static restoreRangePosition()
 	{
 		var textarea = document.getElementById("textarea");
 		textarea.focus();
@@ -543,28 +579,28 @@ module.exports = class Editor {
 			startContainer = textarea,
 			endContainer = textarea;
 
-		container = response.startContainer;
+		container = this.startContainer;
 		length = container.length;
 
 		while (length--) {
 			startContainer = startContainer.childNodes[container[length]];
 		}
 
-		container = response.endContainer;
+		container = this.endContainer;
 		length = container.length;
 
 		while (length--) {
 			endContainer = endContainer.childNodes[container[length]];
 		}
 
-		range.setStart(startContainer, response.startOffset);
-		range.setEnd(endContainer, response.endOffset);
+		range.setStart(startContainer, this.startOffset);
+		range.setEnd(endContainer, this.endOffset);
 
 		selection.removeAllRanges();
 		selection.addRange(range);
 	}
 
-	getNodeIndex(n) {
+	static getNodeIndex(n) {
 		var i=0;
 		while(n = n.previousSibling) {
 			i++;
@@ -606,7 +642,7 @@ module.exports = class Editor {
 	}
 
 	/* Show color palete panel */
-	toggleColorContainer() {
+	static toggleColorContainer() {
 		let linkContainer = document.getElementById("color-palete");
 		if (linkContainer.classList.contains("display")) {
 			linkContainer.classList.remove("display");
@@ -616,3 +652,5 @@ module.exports = class Editor {
 		}
 	}
 }
+
+export default Editor;
