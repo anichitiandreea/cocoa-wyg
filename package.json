@@ -4,7 +4,7 @@
   "description": "A lightweight WYSIWYG editor written in javascript.",
   "main": "dist/bundle.min.js",
   "scripts": {
-    "test": "gulp-test",
+    "test": "jest",
     "build": "gulp build"
   },
   "repository": {
@@ -28,6 +28,7 @@
     "esmify": "^2.1.1",
     "gulp": "^4.0.2",
     "gulp-uglify": "^3.0.2",
+    "jest": "^27.0.6",
     "readable-stream": "^3.6.0",
     "svgify": "0.0.0",
     "vinyl-buffer": "^1.0.1",
