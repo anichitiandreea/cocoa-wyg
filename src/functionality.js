@@ -29,9 +29,11 @@ class Editor {
 		document.getElementById("bullet").addEventListener('click', this.enableBulleted, false);
 		document.getElementById("numbered").addEventListener('click', this.enableNumbered, false);
 
-		var elements = document.getElementById("color-palete").children;
+		let elements = document.getElementById("color-palete").children;
 		for (let index = 0; index < elements.length-1; index++) {
-			elements[index].addEventListener('click', function(){Editor.completeColor(elements[index].style.backgroundColor)}, false);
+			elements[index].addEventListener('click', function() {
+				Editor.completeColor(elements[index].style.backgroundColor)
+			}, false);
 		}
 	}
 
@@ -178,12 +180,6 @@ class Editor {
 			document.execCommand('insertOrderedList', false, null);
 			Editor.checkPreviousState(numbered);
 		}
-	}
-
-	completeWithColor() {
-		var colorPalete = document.getElementById("color-palete");
-		var currentColor = document.getElementById("hex-color");
-		colorPalete.classList.remove("display");
 	}
 
 	/* Check if the button is activated */
@@ -388,7 +384,6 @@ class Editor {
 
 	myFunction(event) {
 		event = event || window.event;
-    	var target = event.target || event.srcElement;
         var caretPosition = Editor.getCaretPosition(event);
 
         Editor.checkButtonsActive(caretPosition);
@@ -402,12 +397,13 @@ class Editor {
 	}
 
 	static getCaretPosition(e) {
-	  	var range, textNode, offset;
+	  	var range, textNode;
 
 	  	if (document.caretPositionFromPoint) {
 	    	range = document.caretPositionFromPoint(e.clientX, e.clientY);
 	    	textNode = range.offsetNode;
-	  	} else if (document.caretRangeFromPoint) {
+	  	}
+		else if (document.caretRangeFromPoint) {
 	    	range = document.caretRangeFromPoint(e.clientX, e.clientY);
 	    	textNode = range.startContainer;
 	  	}
@@ -415,16 +411,8 @@ class Editor {
 	 	return textNode.parentElement;
 	}
 
-    // old
-	completeTextarea() {
-		document.getElementById("submit-button").addEventListener('click', function(e) {
-	        currentText = document.getElementById("textarea").innerHTML;
-	        document.getElementById("textarea-real").innerHTML = currentText;
-	    });
-	}
-
 	/* Add the color to the current (selected) text */
-	static enableTextColor(range, color) {
+	static enableTextColor(color) {
 		var colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
 
@@ -444,7 +432,7 @@ class Editor {
 		});
 
 		document.getElementById("insert-hex").addEventListener('click', function(e) {
-			Editor.enableTextColor(range, document.getElementById("hex-color").value);
+			Editor.enableTextColor(document.getElementById("hex-color").value);
 		});
 
 		document.addEventListener('click', function(e) {
@@ -509,7 +497,6 @@ class Editor {
 	    let displayText = "<a href='" + url + "' id='myUrl'>" + text + "</a>";
 
 		document.getElementById("insert-link").classList.remove("display");
-		let textarea = document.getElementById("textarea");
 
 		if (container.id == "textarea" || container.parentNode.closest("#textarea")) {
 			range.insertNode(createA);
@@ -545,14 +532,14 @@ class Editor {
 		var start = range.startContainer,
 			end = range.endContainer;
 
-		let A=[];
+		let A = [];
 
 		while (start !== textarea) {
 			A.push(Editor.getNodeIndex(start));
 			start = start.parentNode;
 		}
 
-		let B=[];
+		let B = [];
 
 		while (end !== textarea) {
 			B.push(Editor.getNodeIndex(end));
@@ -613,7 +600,8 @@ class Editor {
 	static hidePanel(e, button, container) {
 		let linkContainer = document.getElementById(container),
 			linkButton = document.getElementById(button);
-		if (linkButton !== e.srcElement.closest("#" + button) && linkContainer !== e.srcElement.closest("#" + container)) {
+		if (linkButton !== e.srcElement.closest("#" + button)
+			&& linkContainer !== e.srcElement.closest("#" + container)) {
 			linkContainer.classList.remove("display");
 		}
 	}
