@@ -55,5 +55,8 @@
     "presets": [
       "@babel/preset-env"
     ]
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
