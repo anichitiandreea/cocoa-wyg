@@ -51,7 +51,7 @@ input
   border: none
   box-sizing: border-box
 
-#textarea
+.textarea
   a
     color: #ff6262 !important
     cursor: pointer
@@ -59,18 +59,19 @@ input
 .disabledButton
   color: #393939 !important
 
-#textarea
+.textarea
   -moz-appearance: textfield-multiline
   -webkit-appearance: textarea
   border-top: 0
   overflow: auto
   outline: none
   height: 200px
-  padding: 10px;
+  padding: 10px
   background-color: #2d2d2d
   font-family: 'Fira Sans', sans-serif
   font-size: 0.95em
   color: white
+  outline: none
 
 [contentEditable=true]:empty:not(:focus):before
   content: attr(data-text)
@@ -155,43 +156,7 @@ pre#details > ul
   margin: 0
 
 .submit
-  margin-top: 10px
-
-.preview
-  background-color: #2d2d2d
-  width: calc(70% - 30px)
-  margin-top: 100px
-  padding: 10px
-  height: 200px
-  overflow: auto
-  font-size: .95em
-
-.preview ul li
-  list-style: disc
-
-.preview ul
-  padding-left: 10px
-
-.preview ol li
-  list-style: decimal
-
-.preview ol
-  padding-left: 10px
-
-.preview div ul li
-  list-style: disc
-
-.preview div ul
-  padding-left: 10px
-
-.preview div ol li
-  list-style: decimal
-
-.preview div ol
-  padding-left: 10px
-
-.myHref
-  overflow: hidden
+  width: 100%
 
 .myButtons
   z-index: 5
@@ -230,3 +195,6 @@ pre#details > ul
   stroke-width: 0
   stroke: currentColor
   fill: currentColor
+
+#hex-color
+  margin-top: 10px
