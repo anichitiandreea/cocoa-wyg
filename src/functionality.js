@@ -13,12 +13,13 @@ class Editor {
 	startOffset = 0;
 	endContainer = [];
 	endOffset = 0;
+	static selector = "";
 
 	constructor(selector) {
-		this.selector = selector;
+		Editor.selector = selector;
 		this.buildEditor();
 		Editor.preventDefaultClick();
-		this.disableTextareaButtons();
+		this.disableTextareaButtonsWrapper();
 		this.activateButtons();
 		this.addLink();
 		this.changeColor();
@@ -40,61 +41,58 @@ class Editor {
 	buildEditor() {
 		const editor = document.createElement('div');
 		editor.innerHTML = `
-		<div style="display: flex;flex-direction: column;justify-content: center;align-items: center;height: 100%;">
-	        <div class="textarea-content">
-	            <div class="textarea-menu" id="editor-menu">
-	                <ul class="textarea-ul">
-	                    <li><button class="disabledButton" type="button" id="bold" title="Bold">` + bold.default + `</button></li>
-	                    <li><button class="disabledButton" type="button" id="italic" title="Italic">` + italic.default + `</button></li>
-	                    <li><button class="disabledButton" id="underline" type="button" title="Underline">` + underline.default + `</button></li>
-	                    <li><button class="disabledButton" id="bullet" type="button" title="Bulleted list">` + unorderedList.default + `</button></li>
-	                    <li><button class="disabledButton" id="numbered" type="button" title="Numbered list">` + orderedList.default + `</button></li>
-	                    <li>
-	                        <button type="button" class="hyperlink disabledButton" title="Hyperlink" id="link">` + link.default + `</button>
-	                        <div id="insert-link">
-	                            <input type="text" placeholder="URL" id="url" autocomplete="off" class="link-input">
-	                            <input type="text" placeholder="Text" id="text" autocomplete="off" class="link-input" style="margin-bottom: 0;">
-	                            <div class="submit" style="width: 100%;">
-	                                <input type="button" value="Insert" id="insert">
-	                            </div>
-	                        </div>
-	                    </li>
-						<li><button class="disabledButton" type="button" id="text-color" title="Text color">` + droplet.default + `</button>
+			<div class="textarea-content">
+				<div class="textarea-menu" id="editor-menu">
+					<ul class="textarea-ul">
+						<li><button class="disabledButton" type="button" id="bold">` + bold.default + `</button></li>
+						<li><button class="disabledButton" type="button" id="italic">` + italic.default + `</button></li>
+						<li><button class="disabledButton" id="underline" type="button">` + underline.default + `</button></li>
+						<li><button class="disabledButton" id="bullet" type="button">` + unorderedList.default + `</button></li>
+						<li><button class="disabledButton" id="numbered" type="button">` + orderedList.default + `</button></li>
+						<li>
+							<button type="button" class="hyperlink disabledButton" id="link">` + link.default + `</button>
+							<div id="insert-link">
+								<input type="text" placeholder="URL" id="url" autocomplete="off" class="link-input">
+								<input type="text" placeholder="Text" id="text" autocomplete="off" class="link-input">
+								<div class="submit">
+									<input type="button" value="Insert" id="insert">
+								</div>
+							</div>
+						</li>
+						<li><button class="disabledButton" type="button" id="text-color">` + droplet.default + `</button>
 							<div id="color-palete">
-									<span class="color-option" style="background-color: #7CC791;"></span>
-									<span class="color-option" style="background-color: #8184D6;"></span>
-									<span class="color-option" style="background-color: #D9D470;"></span>
-									<span class="color-option" style="background-color: #E16E6E;"></span>
-									<span class="color-option" style="background-color: #B880CD;"></span>
-									<span class="color-option" style="background-color: #32a854;"></span>
-									<span class="color-option" style="background-color: #393ebf;"></span>
-									<span class="color-option" style="background-color: #c4bc1f;"></span>
-									<span class="color-option" style="background-color: #cf1d1d;"></span>
-									<span class="color-option" style="background-color: #9038b0;"></span>
-									<span class="color-option" style="background-color: #206B36;"></span>
-									<span class="color-option" style="background-color: #25287A;"></span>
-									<span class="color-option" style="background-color: #7E7814;"></span>
-									<span class="color-option" style="background-color: #851212;"></span>
-									<span class="color-option" style="background-color: #5C2471;"></span>
-									<span class="color-option" style="background-color: #F8F8F8;"></span>
-									<span class="color-option" style="background-color: #B0B0B0;"></span>
-									<span class="color-option" style="background-color: #585858;"></span>
-									<span class="color-option" style="background-color: #282828;"></span>
-									<span class="color-option" style="background-color: #181818;"></span>
+								<span class="color-option" style="background-color: #7CC791;"></span>
+								<span class="color-option" style="background-color: #8184D6;"></span>
+								<span class="color-option" style="background-color: #D9D470;"></span>
+								<span class="color-option" style="background-color: #E16E6E;"></span>
+								<span class="color-option" style="background-color: #B880CD;"></span>
+								<span class="color-option" style="background-color: #32a854;"></span>
+								<span class="color-option" style="background-color: #393ebf;"></span>
+								<span class="color-option" style="background-color: #c4bc1f;"></span>
+								<span class="color-option" style="background-color: #cf1d1d;"></span>
+								<span class="color-option" style="background-color: #9038b0;"></span>
+								<span class="color-option" style="background-color: #206B36;"></span>
+								<span class="color-option" style="background-color: #25287A;"></span>
+								<span class="color-option" style="background-color: #7E7814;"></span>
+								<span class="color-option" style="background-color: #851212;"></span>
+								<span class="color-option" style="background-color: #5C2471;"></span>
+								<span class="color-option" style="background-color: #F8F8F8;"></span>
+								<span class="color-option" style="background-color: #B0B0B0;"></span>
+								<span class="color-option" style="background-color: #585858;"></span>
+								<span class="color-option" style="background-color: #282828;"></span>
+								<span class="color-option" style="background-color: #181818;"></span>
 								<div>
-									<input style="margin-top: 10px;" type="text" placeholder="HEX" id="hex-color" autocomplete="off" class="link-input">
+									<input type="text" placeholder="HEX" id="hex-color" autocomplete="off" class="link-input">
 									<input type="button" value="Ok" id="insert-hex">
 								</div>
 							</div>
 						</li>
-	                </ul>
-	            </div>
-	            <div id="textarea" spellcheck="false" contentEditable=true class="description" data-text="Description" style="outline: none;"></div>
-	            <textarea id="textarea-real" name="details" style="display: none;"></textarea>
-	        </div>
-	    </div>`;
+					</ul>
+				</div>
+				<div id="`+ Editor.selector +`" spellcheck="false" contentEditable=true class="textarea"></div>
+			</div>`;
 
-		var textarea = document.getElementById(this.selector);
+		var textarea = document.getElementById(Editor.selector);
 
 		textarea.parentNode.replaceChild(editor, textarea);
 	}
@@ -391,7 +389,7 @@ class Editor {
 
 	/* Call the function which activate the buttons on every click */
 	activateButtons() {
-		var textarea = document.getElementById("textarea");
+		var textarea = document.getElementById(Editor.selector);
 
 		textarea.addEventListener("click", this.myFunction, false);
 	}
@@ -461,8 +459,8 @@ class Editor {
 		});
 
 		document.getElementById("insert").addEventListener('click', function(e) {
-			Editor.insertLink(range, range.startContainer);
-		});
+			Editor.insertLink(range);
+		} , false);
 
 		document.addEventListener('click', function(e) {
 			Editor.hidePanel(e, "link", "insert-link");
@@ -481,7 +479,7 @@ class Editor {
 	}
 
 	/* Insert link in the Editor */
-	static insertLink(range, container) {
+	static insertLink(range) {
 		let url = document.getElementById("url").value,
 			text = document.getElementById("text").value;
 
@@ -498,13 +496,13 @@ class Editor {
 
 		document.getElementById("insert-link").classList.remove("display");
 
-		if (container.id == "textarea" || container.parentNode.closest("#textarea")) {
+		if (range.startContainer.id == Editor.selector || range.startContainer.parentNode.closest("#" + Editor.selector)) {
 			range.insertNode(createA);
 			createA.after(document.createTextNode("\u00A0"));
 		}
 		else {
-			document.getElementById("textarea").innerHTML += displayText;
-			document.getElementById("textarea").innerHTML += '&nbsp;';
+			document.getElementById(Editor.selector).innerHTML += displayText;
+			document.getElementById(Editor.selector).innerHTML += '&nbsp;';
 		}
 	}
 
@@ -526,7 +524,7 @@ class Editor {
 	/* Save curent position */
 	static saveRangePosition()
 	{
-	  	var textarea = document.getElementById("textarea");
+	  	var textarea = document.getElementById(Editor.selector);
 		var range = window.getSelection().getRangeAt(0);
 
 		var start = range.startContainer,
@@ -555,7 +553,7 @@ class Editor {
 	/* Restore last position of range */
 	static restoreRangePosition()
 	{
-		var textarea = document.getElementById("textarea");
+		var textarea = document.getElementById(Editor.selector);
 		textarea.focus();
 
 		var selection = window.getSelection(),
@@ -607,26 +605,28 @@ class Editor {
 	}
 
 	/* Disable the buttons when the click is outside Editor */
-	disableTextareaButtons() {
-		document.addEventListener('click', function(e) {
-			let textarea = document.getElementById("textarea"),
-			    editor = document.getElementById("editor-menu");
-			var buttons = editor.getElementsByTagName("button");
+	disableTextareaButtonsWrapper() {
+		document.addEventListener('click', (e) => this.disableTextareaButtons(e), false);
+	}
 
-			if (textarea !== e.srcElement.closest("#textarea")) {
-				if (editor !== e.srcElement.closest("#editor-menu")) {
-					for (var i = 0; i < buttons.length; i++) {
-						buttons[i].classList.add("disabledButton");
-						buttons[i].classList.remove("item-active");
-					}
+	disableTextareaButtons(e) {
+		let textarea = document.getElementById(Editor.selector),
+			editor = document.getElementById("editor-menu");
+		var buttons = editor.getElementsByTagName("button");
+
+		if (textarea !== e.srcElement.closest("#" + Editor.selector)) {
+			if (editor !== e.srcElement.closest("#editor-menu")) {
+				for (var i = 0; i < buttons.length; i++) {
+					buttons[i].classList.add("disabledButton");
+					buttons[i].classList.remove("item-active");
 				}
 			}
-			else {
-				for (let index = 0; index < buttons.length; index++) {
-					buttons[index].classList.remove("disabledButton");
-				}
+		}
+		else {
+			for (let index = 0; index < buttons.length; index++) {
+				buttons[index].classList.remove("disabledButton");
 			}
-		});
+		}
 	}
 
 	/* Show color palete panel */
