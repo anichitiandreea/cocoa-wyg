@@ -12,10 +12,10 @@
     "url": "git+https://github.com/anichitiandreea/cocoa-wyg.git"
   },
   "keywords": [
-    "editor"
+    "editor", "text-editor", "wysiwyg-editor", "javascript", "rich-text-editor"
   ],
   "author": "Anichiti Andreea",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/anichitiandreea/cocoa-wyg/issues"
   },
