@@ -12,7 +12,11 @@
     "url": "git+https://github.com/anichitiandreea/cocoa-wyg.git"
   },
   "keywords": [
-    "editor", "text-editor", "wysiwyg-editor", "javascript", "rich-text-editor"
+    "editor",
+    "text-editor",
+    "wysiwyg-editor",
+    "javascript",
+    "rich-text-editor"
   ],
   "author": "Anichiti Andreea",
   "license": "MIT",
@@ -52,6 +56,7 @@
     "postcss-assets": "^5.0.0",
     "save-dev": "0.0.1-security",
     "svg-browserify": "0.0.2",
+    "tar": "^6.1.6",
     "trim-newlines": "^4.0.2",
     "yargs-parser": "^20.2.9"
   },
