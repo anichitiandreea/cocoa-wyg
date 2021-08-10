@@ -1,5 +1,3 @@
-/*** WYSIWYG EDITOR ***/
-
 import * as bold from './icons/bold.svg';
 import * as italic from './icons/italic.svg';
 import * as underline from './icons/underline.svg';
@@ -7,28 +5,25 @@ import * as link from './icons/link.svg';
 import * as unorderedList from './icons/list2.svg';
 import * as orderedList from './icons/list-numbered.svg';
 import * as droplet from './icons/droplet.svg';
+import { ButtonsChecker } from './buttons-checker.js';
+import { CursorRangePosition } from './cursor-range-position.js';
 
-class Editor {
-	startContainer = [];
-	startOffset = 0;
-	endContainer = [];
-	endOffset = 0;
+export default class Editor {
 	static selector = "";
 
 	constructor(selector) {
 		Editor.selector = selector;
 		this.buildEditor();
-		Editor.preventDefaultClick();
 		this.disableTextareaButtonsWrapper();
 		this.activateButtons();
 		this.addLink();
 		this.changeColor();
 
-		document.getElementById("bold").addEventListener('click', this.enableBold, false);
-		document.getElementById("italic").addEventListener('click', this.enableItalic, false);
-		document.getElementById("underline").addEventListener('click', this.enableUnderline, false);
-		document.getElementById("bullet").addEventListener('click', this.enableBulleted, false);
-		document.getElementById("numbered").addEventListener('click', this.enableNumbered, false);
+		document.getElementById("bold").addEventListener('mousedown', this.enableBold, false);
+		document.getElementById("italic").addEventListener('mousedown', this.enableItalic, false);
+		document.getElementById("underline").addEventListener('mousedown', this.enableUnderline, false);
+		document.getElementById("bullet").addEventListener('mousedown', this.enableBulleted, false);
+		document.getElementById("numbered").addEventListener('mousedown', this.enableNumbered, false);
 
 		let elements = document.getElementById("color-palete").children;
 		for (let index = 0; index < elements.length-1; index++) {
@@ -97,37 +92,9 @@ class Editor {
 		textarea.parentNode.replaceChild(editor, textarea);
 	}
 
- 	/* Prevent the current click to follow the link path */
-	static preventDefaultClick() {
-		$('#bold').bind('mousedown',function(e)
-	    {
-	        e.preventDefault();
-	    });
-
-	    $('#italic').bind('mousedown',function(e)
-	    {
-	        e.preventDefault();
-	    });
-
-	    $('#underline').bind('mousedown',function(e)
-	    {
-	        e.preventDefault();
-	    });
-
-	    $('#bullet').bind('mousedown',function(e)
-	    {
-	        e.preventDefault();
-	    });
-
-	    $('#numbered').bind('mousedown',function(e)
-	    {
-	        e.preventDefault();
-	    });
-	}
-
 	/* Enable bold for the typed text */
-	enableBold() {
-		Editor.preventDefaultClick();
+	enableBold(event) {
+		event.preventDefault();
 		var bold = document.getElementById("bold");
 
 		if (!bold.classList.contains("disabledButton")) {
@@ -137,8 +104,8 @@ class Editor {
 	}
 
 	/* Enable italic for the typed text */
-	enableItalic() {
-		Editor.preventDefaultClick();
+	enableItalic(event) {
+		event.preventDefault();
 		var italic = document.getElementById("italic");
 
 		if (!italic.classList.contains("disabledButton")) {
@@ -148,8 +115,8 @@ class Editor {
 	}
 
 	/* Enable underline for the typed text */
-	enableUnderline() {
-		Editor.preventDefaultClick();
+	enableUnderline(event) {
+		event.preventDefault();
 		var underline = document.getElementById("underline");
 
 		if (!underline.classList.contains("disabledButton")) {
@@ -159,8 +126,8 @@ class Editor {
 	}
 
 	/* Enable buleted list for the typed text */
-	enableBulleted() {
-		Editor.preventDefaultClick();
+	enableBulleted(event) {
+		event.preventDefault();
 		var bullet = document.getElementById("bullet");
 
 		if (!bullet.classList.contains("disabledButton")) {
@@ -170,8 +137,8 @@ class Editor {
 	}
 
 	/* Enable numbered list for the typed text */
-	enableNumbered() {
-		Editor.preventDefaultClick();
+	enableNumbered(event) {
+		event.preventDefault();
 		var numbered = document.getElementById("numbered");
 
 		if (!numbered.classList.contains("disabledButton")) {
@@ -190,201 +157,11 @@ class Editor {
 		}
 	}
 
-	/* Check for every click if the current cursor position is inside bold, italic, etc;*/
-	static checkButtonsActive(target) {
-		var bold = document.getElementById("bold");
-		var italic = document.getElementById("italic");
-		var underline = document.getElementById("underline");
-		var bullet = document.getElementById("bullet");
-		var numbered = document.getElementById("numbered");
-
-		Editor.checkBoldElement(target, "B", bold, "bold");
-		Editor.checkItalicElement(target, "I", italic, "italic");
-		Editor.checkUnderlineElement(target, "U", underline, "underline");
-
-		Editor.checkClickedULElement(target, "LI", bullet);
-		Editor.checkClickedOLElement(target, "LI", numbered);
-	}
-
-	/* Check if the target clicked is B etc;
-	   If it is true than activate the coresponding button, else disable it */
-	static checkBoldElement(target, tagName, element, fontWeight) {
-		var ok = 1;
-
-		if (target.style.fontWeight == fontWeight) {
-			element.classList.add("item-active");
-			ok = 0;
-		}
-
-		// Check the curent target element
-		if (target.tagName == tagName) {
-			element.classList.add("item-active");
-			ok = 0;
-		}
-
-		// Check the first child of target
-	    if (target.firstChild.tagName == tagName) {
-	    	element.classList.add("item-active");
-	    	ok = 0;
-	    }
-
-	    if (target.firstChild != null && target.firstChild.nodeType != 3) {
-		    if (target.firstChild.style.fontWeight == fontWeight) {
-		    	element.classList.add("item-active");
-		    	ok = 0;
-		    }
-		}
-
-	    var copyTarget = target;
-
-	    // Iterate all the parents of clicked element
-		while (copyTarget.parentNode && copyTarget.parentNode.tagName !== "BODY") {
-		    copyTarget = copyTarget.parentNode;
-		    if (copyTarget.tagName == tagName || copyTarget.style.fontWeight == fontWeight) {
-		    	element.classList.add("item-active");
-		    	ok = 0;
-		    }
-	    }
-
-	    // If none of the targets match the curent tag name than remove the activated button color
-	    if (!target.classList.contains("textarea-content") && ok == 1) {
-			element.classList.remove("item-active");
-		}
-	}
-
-	/* Check if the target clicked is I etc;
-	   If it is true than activate the coresponding button, else disable it */
-	static checkItalicElement(target, tagName, element, fontStyle) {
-		var ok = 1;
-
-		if (target.style.fontStyle == fontStyle) {
-			element.classList.add("item-active");
-			ok = 0;
-		}
-
-		// Check the curent target element
-		if (target.tagName == tagName) {
-			element.classList.add("item-active");
-			ok = 0;
-		}
-
-		// Check the first child of target
-	    if (target.firstChild.tagName == tagName) {
-	    	element.classList.add("item-active");
-	    	ok = 0;
-	    }
-
-	    if (target.firstChild != null && target.firstChild.nodeType != 3) {
-		    if (target.firstChild.style.fontStyle == fontStyle) {
-		    	element.classList.add("item-active");
-		    	ok = 0;
-		    }
-		}
-
-	    var copyTarget = target;
-
-	    // Iterate all the parents of clicked element
-		while (copyTarget.parentNode && copyTarget.parentNode.tagName !== "BODY") {
-		    copyTarget = copyTarget.parentNode;
-		    if (copyTarget.tagName == tagName || copyTarget.style.fontStyle == fontStyle) {
-		    	element.classList.add("item-active");
-		    	ok = 0;
-		    }
-	    }
-
-	    // If none of the targets match the curent tag name than remove the activated button color
-	    if (!target.classList.contains("textarea-content") && ok == 1) {
-			element.classList.remove("item-active");
-		}
-	}
-
-	/* Check if the target clicked is U etc;
-	   If it is true than activate the coresponding button, else disable it */
-	static checkUnderlineElement(target, tagName, element, textDecoration) {
-		var ok = 1;
-
-		if (target.style.textDecoration == textDecoration) {
-			element.classList.add("item-active");
-			ok = 0;
-		}
-
-		// Check the curent target element
-		if (target.tagName == tagName) {
-			element.classList.add("item-active");
-			ok = 0;
-		}
-
-		// Check the first child of target
-	    if (target.firstChild.tagName == tagName) {
-	    	element.classList.add("item-active");
-	    	ok = 0;
-	    }
-
-	    if (target.firstChild != null && target.firstChild.nodeType != 3) {
-		    if (target.firstChild.style.textDecoration == textDecoration) {
-		    	element.classList.add("item-active");
-		    	ok = 0;
-		    }
-		}
-
-	    var copyTarget = target;
-
-	    // Iterate all the parents of clicked element
-		while (copyTarget.parentNode && copyTarget.parentNode.tagName !== "BODY") {
-		    copyTarget = copyTarget.parentNode;
-		    if (copyTarget.tagName == tagName || copyTarget.style.textDecoration == textDecoration) {
-		    	element.classList.add("item-active");
-		    	ok = 0;
-		    }
-	    }
-
-	    // If none of the targets match the curent tag name than remove the activated button color
-	    if (!target.classList.contains("textarea-content") && ok == 1) {
-			element.classList.remove("item-active");
-		}
-	}
-
-	/* Check if the target clicked is an UL element etc;
-	   If it is true than activate the coresponding button, else disable it */
-	static checkClickedULElement(caretPosition, tagName, element) {
-		if (caretPosition.tagName == tagName && caretPosition.closest("ul") != null) {
-        	element.classList.add("item-active");
-        }
-        else if (!caretPosition.classList.contains("textarea-content")) {
-        	element.classList.remove("item-active");
-        }
-
-        while(caretPosition.parentNode && caretPosition.parentNode.tagName !=="BODY") {
-		    caretPosition = caretPosition.parentNode;
-		    if (caretPosition.tagName == tagName && caretPosition.closest("ul") != null) {
-		    	element.classList.add("item-active");
-		    }
-	    }
-	}
-
-	/* Check if the target clicked is an OL etc;
-	   If it is true than activate the coresponding button, else disable it */
-	static checkClickedOLElement(caretPosition, tagName, element) {
-		if (caretPosition.tagName == tagName && caretPosition.closest("ol") != null) {
-        	element.classList.add("item-active");
-        }
-        else if (!caretPosition.classList.contains("textarea-content")) {
-        	element.classList.remove("item-active");
-        }
-
-        while(caretPosition.parentNode && caretPosition.parentNode.tagName !=="BODY") {
-		    caretPosition = caretPosition.parentNode;
-		    if (caretPosition.tagName == tagName && caretPosition.closest("ol") != null) {
-		    	element.classList.add("item-active");
-		    }
-	    }
-	}
-
 	myFunction(event) {
 		event = event || window.event;
-        var caretPosition = Editor.getCaretPosition(event);
+        var caretPosition = CursorRangePosition.getCaretPosition(event);
 
-        Editor.checkButtonsActive(caretPosition);
+        new ButtonsChecker().checkButtonsActive(caretPosition);
 	}
 
 	/* Call the function which activate the buttons on every click */
@@ -394,27 +171,12 @@ class Editor {
 		textarea.addEventListener("click", this.myFunction, false);
 	}
 
-	static getCaretPosition(e) {
-	  	var range, textNode;
-
-	  	if (document.caretPositionFromPoint) {
-	    	range = document.caretPositionFromPoint(e.clientX, e.clientY);
-	    	textNode = range.offsetNode;
-	  	}
-		else if (document.caretRangeFromPoint) {
-	    	range = document.caretRangeFromPoint(e.clientX, e.clientY);
-	    	textNode = range.startContainer;
-	  	}
-
-	 	return textNode.parentElement;
-	}
-
 	/* Add the color to the current (selected) text */
 	static enableTextColor(color) {
 		var colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
 
-		Editor.restoreRangePosition();
+		CursorRangePosition.restoreRangePosition();
 
 		document.execCommand('styleWithCSS', false, true);
 	   	document.execCommand('foreColor', false, color);
@@ -425,8 +187,8 @@ class Editor {
 		let range = null;
 		document.getElementById("text-color").addEventListener('click', function(e) {
 			Editor.toggleColorContainer();
-			range = Editor.saveSelection();
-			Editor.saveRangePosition();
+			range = CursorRangePosition.saveSelection();
+			CursorRangePosition.saveRangePosition();
 		});
 
 		document.getElementById("insert-hex").addEventListener('click', function(e) {
@@ -444,7 +206,7 @@ class Editor {
 		var colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
 
-		Editor.restoreRangePosition();
+		CursorRangePosition.restoreRangePosition();
 
 		document.execCommand('styleWithCSS', false, true);
 	   	document.execCommand('foreColor', false, color);
@@ -455,7 +217,7 @@ class Editor {
 		let range = null;
 		document.getElementById("link").addEventListener('click', function(e) {
 			Editor.toggleLinkContainer();
-			range = Editor.saveSelection();
+			range = CursorRangePosition.saveSelection();
 		});
 
 		document.getElementById("insert").addEventListener('click', function(e) {
@@ -506,94 +268,6 @@ class Editor {
 		}
 	}
 
-	/* Save the current position of the caret */
-	static saveSelection() {
-	    if (window.getSelection) {
-	        let sel = window.getSelection();
-	        if (sel.getRangeAt && sel.rangeCount) {
-	            return sel.getRangeAt(0);
-	        }
-	    }
-	    else if (document.selection && document.selection.createRange) {
-	        return document.selection.createRange();
-	    }
-
-	    return null;
-	}
-
-	/* Save curent position */
-	static saveRangePosition()
-	{
-	  	var textarea = document.getElementById(Editor.selector);
-		var range = window.getSelection().getRangeAt(0);
-
-		var start = range.startContainer,
-			end = range.endContainer;
-
-		let A = [];
-
-		while (start !== textarea) {
-			A.push(Editor.getNodeIndex(start));
-			start = start.parentNode;
-		}
-
-		let B = [];
-
-		while (end !== textarea) {
-			B.push(Editor.getNodeIndex(end));
-			end = end.parentNode;
-		}
-
-		this.startContainer = A;
-		this.startOffset = range.startOffset;
-		this.endContainer = B;
-		this.endOffset = range.endOffset;
-	}
-
-	/* Restore last position of range */
-	static restoreRangePosition()
-	{
-		var textarea = document.getElementById(Editor.selector);
-		textarea.focus();
-
-		var selection = window.getSelection(),
-			range = selection.getRangeAt(0);
-
-		var length,
-			container,
-			startContainer = textarea,
-			endContainer = textarea;
-
-		container = this.startContainer;
-		length = container.length;
-
-		while (length--) {
-			startContainer = startContainer.childNodes[container[length]];
-		}
-
-		container = this.endContainer;
-		length = container.length;
-
-		while (length--) {
-			endContainer = endContainer.childNodes[container[length]];
-		}
-
-		range.setStart(startContainer, this.startOffset);
-		range.setEnd(endContainer, this.endOffset);
-
-		selection.removeAllRanges();
-		selection.addRange(range);
-	}
-
-	static getNodeIndex(n) {
-		var i=0;
-		while(n = n.previousSibling) {
-			i++;
-		}
-
-		return i;
-	}
-
 	/* Close link panel when you click on insert button or inside panel */
 	static hidePanel(e, button, container) {
 		let linkContainer = document.getElementById(container),
@@ -640,5 +314,3 @@ class Editor {
 		}
 	}
 }
-
-export default Editor;
