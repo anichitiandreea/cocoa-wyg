@@ -15,9 +15,12 @@ export default class Editor {
 		Editor.selector = selector;
 		this.buildEditor();
 		this.disableTextareaButtonsWrapper();
-		this.activateButtons();
 		this.addLink();
 		this.changeColor();
+
+		var textarea = document.getElementById(selector);
+
+		textarea.addEventListener("click", this.activateButtons, false);
 
 		document.getElementById("bold").addEventListener('mousedown', this.enableBold, false);
 		document.getElementById("italic").addEventListener('mousedown', this.enableItalic, false);
@@ -99,7 +102,7 @@ export default class Editor {
 
 		if (!bold.classList.contains("disabledButton")) {
 			document.execCommand('bold');
-			Editor.checkPreviousState(bold);
+			Editor.toggleButtonState(bold);
 		}
 	}
 
@@ -110,7 +113,7 @@ export default class Editor {
 
 		if (!italic.classList.contains("disabledButton")) {
 			document.execCommand('italic');
-			Editor.checkPreviousState(italic);
+			Editor.toggleButtonState(italic);
 		}
 	}
 
@@ -121,7 +124,7 @@ export default class Editor {
 
 		if (!underline.classList.contains("disabledButton")) {
 			document.execCommand('underline');
-			Editor.checkPreviousState(underline);
+			Editor.toggleButtonState(underline);
 		}
 	}
 
@@ -132,7 +135,7 @@ export default class Editor {
 
 		if (!bullet.classList.contains("disabledButton")) {
 			document.execCommand('insertUnorderedList', false, null);
-			Editor.checkPreviousState(bullet);
+			Editor.toggleButtonState(bullet);
 		}
 	}
 
@@ -143,37 +146,29 @@ export default class Editor {
 
 		if (!numbered.classList.contains("disabledButton")) {
 			document.execCommand('insertOrderedList', false, null);
-			Editor.checkPreviousState(numbered);
+			Editor.toggleButtonState(numbered);
 		}
 	}
 
-	/* Check if the button is activated */
-	static checkPreviousState(element) {
-		if (!element.classList.contains("item-active")) {
-			element.classList.add("item-active");
-		}
-		else {
+	static toggleButtonState(element) {
+		if (element.classList.contains("item-active")) {
 			element.classList.remove("item-active");
 		}
+		else {
+			element.classList.add("item-active");
+		}
 	}
 
-	myFunction(event) {
+	activateButtons(event) {
 		event = event || window.event;
-        var caretPosition = CursorRangePosition.getCaretPosition(event);
+        let caretPosition = CursorRangePosition.getCaretPosition(event);
 
         new ButtonsChecker().checkButtonsActive(caretPosition);
 	}
 
-	/* Call the function which activate the buttons on every click */
-	activateButtons() {
-		var textarea = document.getElementById(Editor.selector);
-
-		textarea.addEventListener("click", this.myFunction, false);
-	}
-
 	/* Add the color to the current (selected) text */
 	static enableTextColor(color) {
-		var colorPalete = document.getElementById("color-palete");
+		let colorPalete = document.getElementById("color-palete");
 		colorPalete.classList.remove("display");
 
 		CursorRangePosition.restoreRangePosition();
@@ -182,7 +177,6 @@ export default class Editor {
 	   	document.execCommand('foreColor', false, color);
 	}
 
-	/* Begin change of text color implementation */
 	changeColor() {
 		let range = null;
 		document.getElementById("text-color").addEventListener('click', function(e) {
@@ -203,13 +197,17 @@ export default class Editor {
 	/* Complete with default colors */
 	static completeColor(color) {
 		document.getElementById("hex-color").value = color;
-		var colorPalete = document.getElementById("color-palete");
-		colorPalete.classList.remove("display");
+		Editor.enableTextColor(color);
+	}
 
-		CursorRangePosition.restoreRangePosition();
-
-		document.execCommand('styleWithCSS', false, true);
-	   	document.execCommand('foreColor', false, color);
+	static toggleColorContainer() {
+		let linkContainer = document.getElementById("color-palete");
+		if (linkContainer.classList.contains("display")) {
+			linkContainer.classList.remove("display");
+		}
+		else if (!document.getElementById("text-color").classList.contains("disabledButton")) {
+			linkContainer.classList.add("display");
+		}
 	}
 
 	/* Add link pipeline */
@@ -268,10 +266,10 @@ export default class Editor {
 		}
 	}
 
-	/* Close link panel when you click on insert button or inside panel */
 	static hidePanel(e, button, container) {
 		let linkContainer = document.getElementById(container),
 			linkButton = document.getElementById(button);
+
 		if (linkButton !== e.srcElement.closest("#" + button)
 			&& linkContainer !== e.srcElement.closest("#" + container)) {
 			linkContainer.classList.remove("display");
@@ -300,17 +298,6 @@ export default class Editor {
 			for (let index = 0; index < buttons.length; index++) {
 				buttons[index].classList.remove("disabledButton");
 			}
-		}
-	}
-
-	/* Show color palete panel */
-	static toggleColorContainer() {
-		let linkContainer = document.getElementById("color-palete");
-		if (linkContainer.classList.contains("display")) {
-			linkContainer.classList.remove("display");
-		}
-		else if (!document.getElementById("text-color").classList.contains("disabledButton")) {
-			linkContainer.classList.add("display");
 		}
 	}
 }
