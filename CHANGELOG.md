@@ -1,3 +1,35 @@
+#### 1.2.0 (2021-08-18)
+
+##### Chores
+
+*  remove jquery package ([#13](https://github.com/anichitiandreea/cocoa-wyg/pull/13)) ([bfd442c1](https://github.com/anichitiandreea/cocoa-wyg/commit/bfd442c17872f9c8ed123027718fa9b87c5e7e86))
+*  bump path-parse from 1.0.6 to 1.0.7 ([0751f994](https://github.com/anichitiandreea/cocoa-wyg/commit/0751f9940926495cfb72246c3618f94d4022053e))
+*  bump tar from 2.2.2 to 6.1.6 ([4fe1c1db](https://github.com/anichitiandreea/cocoa-wyg/commit/4fe1c1dbddc714e22ef83fbddd88117cfff00174))
+*  fix ESLint warnings ([#19](https://github.com/anichitiandreea/cocoa-wyg/pull/19)) ([9c4aa4c2](https://github.com/anichitiandreea/cocoa-wyg/commit/9c4aa4c214621688bdbe005984c8625e670dd8d8))
+*  install ESLint package ([#19](https://github.com/anichitiandreea/cocoa-wyg/pull/19)) ([cf261d79](https://github.com/anichitiandreea/cocoa-wyg/commit/cf261d79e2afb033f6eb60784374047f5b0c5dd4))
+*  generate CHANGELOG.md file ([6fc5e8d2](https://github.com/anichitiandreea/cocoa-wyg/commit/6fc5e8d2fb60691cc4543a5bfb31775d2f66c6e9))
+
+##### Documentation Changes
+
+*  update README.md ([#14](https://github.com/anichitiandreea/cocoa-wyg/pull/14)) ([b339f74c](https://github.com/anichitiandreea/cocoa-wyg/commit/b339f74c72f4dd075e12d4d8bb20c1a794ee0600))
+*  add badges to README.md file ([#14](https://github.com/anichitiandreea/cocoa-wyg/pull/14)) ([4c65469e](https://github.com/anichitiandreea/cocoa-wyg/commit/4c65469e4ac6d59ee74e7bf6bf1e53d040783bd7))
+
+##### New Features
+
+*  change font-size for selected text ([#24](https://github.com/anichitiandreea/cocoa-wyg/pull/24)) ([30d0121c](https://github.com/anichitiandreea/cocoa-wyg/commit/30d0121c9be9ed8a0092041394cb9a5d9af171f0))
+*  move code in two separate class modules ([#13](https://github.com/anichitiandreea/cocoa-wyg/pull/13)) ([2f947b94](https://github.com/anichitiandreea/cocoa-wyg/commit/2f947b94b990a15865767868ebd980c6e190864d))
+
+##### Bug Fixes
+
+*  untrack files in .gitignore ([#17](https://github.com/anichitiandreea/cocoa-wyg/pull/17)) ([282bac46](https://github.com/anichitiandreea/cocoa-wyg/commit/282bac466b071f65f92d3decae3eb011411833bd))
+*  replace the editor selector with the one passed to constructor ([#17](https://github.com/anichitiandreea/cocoa-wyg/pull/17)) ([6090680c](https://github.com/anichitiandreea/cocoa-wyg/commit/6090680cffe6abde973645db83e22b2b27c186e8))
+
+##### Refactors
+
+*  make some renames ([#13](https://github.com/anichitiandreea/cocoa-wyg/pull/13)) ([1f6fc1f7](https://github.com/anichitiandreea/cocoa-wyg/commit/1f6fc1f71e2bfab5243a26d5b540bebfccf2d472))
+*  remove useless space before list items ([#17](https://github.com/anichitiandreea/cocoa-wyg/pull/17)) ([ab7e4648](https://github.com/anichitiandreea/cocoa-wyg/commit/ab7e4648fb43fb3e6b160e39d98c2b89a4a27513))
+*  update the title of icons ([#17](https://github.com/anichitiandreea/cocoa-wyg/pull/17)) ([2074f434](https://github.com/anichitiandreea/cocoa-wyg/commit/2074f4342875a1c11df5daad62bfb4acd9f59735))
+
 #### 1.1.0 (2021-07-25)
 
 ##### Chores
