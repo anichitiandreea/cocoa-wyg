@@ -5,6 +5,7 @@ import * as link from './icons/link.svg';
 import * as unorderedList from './icons/list2.svg';
 import * as orderedList from './icons/list-numbered.svg';
 import * as droplet from './icons/droplet.svg';
+import * as fontSize from './icons/font-size.svg';
 import { ButtonsChecker } from './buttons-checker.js';
 import { CursorRangePosition } from './cursor-range-position.js';
 
@@ -17,6 +18,7 @@ export default class Editor {
 		this.disableTextareaButtonsWrapper();
 		this.addLink();
 		this.changeColor();
+		this.changeFontSize();
 
 		var textarea = document.getElementById(selector);
 
@@ -82,6 +84,17 @@ export default class Editor {
 								<div>
 									<input type="text" placeholder="HEX" id="hex-color" autocomplete="off" class="link-input">
 									<input type="button" value="Ok" id="insert-hex">
+								</div>
+							</div>
+						</li>
+						<li><button class="disabledButton" id="font-sized" type="button">` + fontSize.default + `</button>
+							<div id="font-size-container">
+								<div class="font-size-input-wrapper">
+									<input type="text" id="font-size-input" autocomplete="off">
+									<p class="px-paragraph">px</p>
+								</div>
+								<div class="submit">
+									<input type="button" value="Apply" id="apply">
 								</div>
 							</div>
 						</li>
@@ -180,7 +193,7 @@ export default class Editor {
 	changeColor() {
 		let range = null;
 		document.getElementById("text-color").addEventListener('click', function(e) {
-			Editor.toggleColorContainer();
+			Editor.toggleContainer("color-palete", "text-color");
 			range = CursorRangePosition.saveSelection();
 			CursorRangePosition.saveRangePosition();
 		});
@@ -200,21 +213,40 @@ export default class Editor {
 		Editor.enableTextColor(color);
 	}
 
-	static toggleColorContainer() {
-		let linkContainer = document.getElementById("color-palete");
-		if (linkContainer.classList.contains("display")) {
-			linkContainer.classList.remove("display");
-		}
-		else if (!document.getElementById("text-color").classList.contains("disabledButton")) {
-			linkContainer.classList.add("display");
-		}
+	changeFontSize() {
+		document.getElementById("font-sized").addEventListener('click', function(e) {
+			Editor.toggleContainer("font-size-container", "font-sized");
+			CursorRangePosition.saveRangePosition();
+		});
+
+		document.getElementById("apply").addEventListener('click', function(e) {
+			Editor.enableFontSize();
+		}, false);
+
+		document.addEventListener('click', function(e) {
+			Editor.hidePanel(e, "font-sized", "font-size-container");
+		});
 	}
 
-	/* Add link pipeline */
+	static enableFontSize() {
+		let size = document.getElementById("font-size-input").value;
+		let fontSizeContainer = document.getElementById("font-size-container");
+		fontSizeContainer.classList.remove("display");
+
+		CursorRangePosition.restoreRangePosition();
+
+		let span = document.createElement("SPAN");
+		let text = document.createTextNode(document.getSelection());
+		span.appendChild(text);
+		span.setAttribute("style", "font-size:" + size + "px");
+
+		document.execCommand('insertHTML', false, span.outerHTML);
+	}
+
 	addLink() {
 		let range = null;
 		document.getElementById("link").addEventListener('click', function(e) {
-			Editor.toggleLinkContainer();
+			Editor.toggleContainer("insert-link", "link");
 			range = CursorRangePosition.saveSelection();
 		});
 
@@ -227,18 +259,6 @@ export default class Editor {
 		});
 	}
 
-	/* Show link panel */
-	static toggleLinkContainer() {
-		let linkContainer = document.getElementById("insert-link");
-		if (linkContainer.classList.contains("display")) {
-			linkContainer.classList.remove("display");
-		}
-		else if (!document.getElementById("link").classList.contains("disabledButton")) {
-			linkContainer.classList.add("display");
-		}
-	}
-
-	/* Insert link in the Editor */
 	static insertLink(range) {
 		let url = document.getElementById("url").value,
 			text = document.getElementById("text").value;
@@ -298,6 +318,16 @@ export default class Editor {
 			for (let index = 0; index < buttons.length; index++) {
 				buttons[index].classList.remove("disabledButton");
 			}
+		}
+	}
+
+	static toggleContainer(containerId, buttonId) {
+		let linkContainer = document.getElementById(containerId);
+		if (linkContainer.classList.contains("display")) {
+			linkContainer.classList.remove("display");
+		}
+		else if (!document.getElementById(buttonId).classList.contains("disabledButton")) {
+			linkContainer.classList.add("display");
 		}
 	}
 }
