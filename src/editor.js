@@ -144,10 +144,12 @@ export default class Editor {
 	/* Enable buleted list for the typed text */
 	enableBulleted(event) {
 		event.preventDefault();
-		var bullet = document.getElementById("bullet");
+		let bullet = document.getElementById("bullet");
+		let numbered = document.getElementById("numbered");
 
 		if (!bullet.classList.contains("disabledButton")) {
 			document.execCommand('insertUnorderedList', false, null);
+			Editor.disableOtherListType(numbered);
 			Editor.toggleButtonState(bullet);
 		}
 	}
@@ -155,12 +157,18 @@ export default class Editor {
 	/* Enable numbered list for the typed text */
 	enableNumbered(event) {
 		event.preventDefault();
-		var numbered = document.getElementById("numbered");
+		let numbered = document.getElementById("numbered");
+		let bullet = document.getElementById("bullet");
 
 		if (!numbered.classList.contains("disabledButton")) {
 			document.execCommand('insertOrderedList', false, null);
+			Editor.disableOtherListType(bullet);
 			Editor.toggleButtonState(numbered);
 		}
+	}
+
+	static disableOtherListType(element) {
+		element.classList.remove("item-active");
 	}
 
 	static toggleButtonState(element) {
