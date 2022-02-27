@@ -6,16 +6,19 @@ import gulp from "gulp";
 import source from "vinyl-source-stream";
 import svg from "svg-browserify";
 import buffer from "vinyl-buffer";
-import sass from "gulp-sass";
 import postcss from "gulp-postcss";
 import cssnano from "cssnano";
 import rename from "gulp-rename";
 import uglify from "gulp-uglify";
 import browserifyCss from "browserify-css";
+import dartSass from 'sass';
+import gulpSass from 'gulp-sass';
 
 const
 	src = "src/",
 	build = "dist/";
+
+const sass = gulpSass(dartSass)
 
 // CSS processing
 function css() {
@@ -24,13 +27,7 @@ function css() {
 	];
 
 	return gulp.src(src + "/styles.sass")
-		.pipe(
-			sass({
-				outputStyle: "nested",
-				precision: 3,
-				errLogToConsole: true
-			}).on("error", sass.logError)
-		)
+		.pipe(sass.sync().on('error', sass.logError))
 		.pipe(postcss(plugins))
 		.pipe(rename("styles.min.css"))
 		.pipe(gulp.dest(build));
