@@ -1,5 +1,4 @@
 // Gulp.js configuration
-
 import browserify from "browserify";
 import babelify from "babelify";
 import gulp from "gulp";
@@ -15,35 +14,39 @@ import dartSass from 'sass';
 import gulpSass from 'gulp-sass';
 
 const
-	src = "src/",
-	build = "dist/";
+  src = "src/",
+  build = "dist/";
 
 const sass = gulpSass(dartSass)
 
 // CSS processing
 function css() {
-	var plugins = [
-		cssnano()
-	];
+  var plugins = [
+    cssnano()
+  ];
 
-	return gulp.src(src + "/styles.sass")
-		.pipe(sass.sync().on('error', sass.logError))
-		.pipe(postcss(plugins))
-		.pipe(rename("styles.min.css"))
-		.pipe(gulp.dest(build));
+  return gulp.src(src + "/styles.sass")
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(postcss(plugins))
+    .pipe(rename("styles.min.css"))
+    .pipe(gulp.dest(build));
 }
 
 var bundleTask = function() {
-	return browserify("index.js")
-		.transform(babelify, {presets: ["@babel/preset-env"]})
-		.transform(svg)
-		.transform(browserifyCss)
-		.bundle()
-		.pipe(source("bundle.js"))
-		.pipe(rename({ extname: ".min.js" }))
-		.pipe(buffer())
-		.pipe(uglify())
-		.pipe(gulp.dest(build));
+  return browserify("index.js")
+    .transform(babelify, {
+      presets: ["@babel/preset-env"]
+    })
+    .transform(svg)
+    .transform(browserifyCss)
+    .bundle()
+    .pipe(source("bundle.js"))
+    .pipe(rename({
+      extname: ".min.js"
+    }))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest(build));
 };
 
 gulp.task("bundle", bundleTask);
@@ -54,10 +57,10 @@ gulp.task("build", gulp.series("css", "bundle"));
 
 // watch for file changes
 function watch(done) {
-	// css changes
-	gulp.watch(src + "/styles.sass", css);
+  // css changes
+  gulp.watch(src + "/styles.sass", css);
 
-	done();
+  done();
 }
 
 gulp.task("watch", watch);
